@@ -1,0 +1,19 @@
+# HCN Freq RHF/6-31+G**
+#basis_set = 6-31+G**
+initial_guess = SAD
+use_symmetry = true
+basis_set = cc-pVTZ
+post_scf = MP2
+diis_range = 5
+eri_screen = false
+geom_opt = MP2
+geom_opt_tol = HIGH
+hessian_step_from_grad = 1.0E-05
+frequencies = MP2
+units = angstrom
+{
+	N   0   0   0
+	C   0   0   1.165
+	H   0   0   2.229
+}
+

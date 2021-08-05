@@ -1,0 +1,24 @@
+# ethane RHF/6-31G* CCSD 
+scf_type = RHF
+basis_set = 6-31G*
+freeze_core = false
+post_scf = CCSD
+ccsd_diis_range = 5
+gradient_type = MP2
+geom_opt = MP2
+#geom_opt_write_xyz = true
+# adjust structure to fit point group exactly
+symmetrize_geom = true
+
+units = angstrom
+{
+	C  0.000000000 -0.000000000 -0.500000000
+	C -0.000000000  0.000000000  0.500000000	
+	H  0.866025469  0.500000038 -1.100000000
+	H  0.866025469 -0.500000038  1.100000000
+	H -0.000000000 -1.000000075 -1.100000000
+	H -0.866025469 -0.500000038  1.100000000
+	H -0.866025469  0.500000038 -1.100000000
+	H  0.000000000  1.000000075  1.100000000
+}
+

@@ -1,0 +1,17 @@
+# Water RHF/cc-PVQZ costly
+basis_set = cc-PVQZ
+initial_guess = SAD
+use_symmetry = true
+#post_scf = MP2
+diis_range = 7
+#gradient_type = SCF
+eri_screen = false
+rms_tol = 0.5E-09
+energy_tol = 1E-08
+units = angstrom
+{
+    8    0.000000000   -0.075791844    0.000000
+    1    0.866811829    0.601435779    0.000000
+    1   -0.866811829    0.601435779    0.000000
+}
+

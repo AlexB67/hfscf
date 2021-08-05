@@ -1,0 +1,15 @@
+# H2O2 staggered polarizabilities 
+electronic_properties = true
+basis_set = 6-311++g(2d,2p)
+diis_range = 5
+ccsd_diis_range = 5
+energy_tol = 1.0e-09
+rms_tol = 1.0e-09
+#gradient_type = SCF
+units = angstrom
+{
+	O   0.0000000000  0.0000000000  0.0000000000
+	O   0.0000000000  0.0000000000  1.4533000000
+	H   0.0000000000  0.9697852100 -0.1117277332
+	H  -0.8398586281 -0.4848926050  1.5650277332
+}

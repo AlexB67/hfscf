@@ -1,0 +1,24 @@
+# Water RHF/6-31G Hessian
+#symmetrize_geom = true
+basis_set = 6-31G
+#basis_set =  6-311++G
+#use_symmetry = true
+initial_guess = SAD
+diis_range = 5
+#post_scf = MP2
+energy_tol = 1.0e-9
+rms_tol = 1.0e-9
+eri_screen = false
+electronic_properties = true
+frequencies = SCF
+#thermo_chem_pressure = 100000.0
+#thermo_chem_temperature = 273.15
+geom_opt = SCF
+geom_opt_tol = HIGH
+gradient_type = SCF
+{
+   O  -0.000000000003     0.000000000000    -0.112929827494
+   H  -1.483747300978     0.000000000000     0.896139156594
+   H   1.483747301023     0.000000000000     0.896139156604
+}
+

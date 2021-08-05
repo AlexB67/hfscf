@@ -1,0 +1,7 @@
+#ifndef HFSCF_MESON_CONFIG_H
+#define HFSCF_MESON_CONFIG_H
+#mesondefine PACKAGE_DATADIR
+#mesondefine HFSCF_DIR
+#define VERSION_STR "@version@"
+#endif
+// end HFSCF_MESON_CONFIG_H

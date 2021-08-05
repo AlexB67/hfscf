@@ -1,0 +1,9 @@
+# HCl HF/6-311++g(2d,2p) MP2
+basis_set = 6-311++g(2d,2p)
+initial_guess = CORE
+post_scf = MP3
+diis_range = 5
+{
+    1    2.408645 0.0  0.0
+    17   0.00	  0.0  0.0
+}

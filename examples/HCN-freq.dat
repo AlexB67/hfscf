@@ -1,0 +1,17 @@
+# HCN RHF Freq
+#basis_set = 6-31+G**
+basis_set = 6-311++g(2d,2p)
+use_symmetry = true
+diis_range = 5
+eri_screen = false
+geom_opt_tol = HIGH
+geom_opt_stepsize = 1.0
+geom_opt = SCF
+frequencies = SCF
+units = angstrom
+{
+	N   0   0   0
+	C   0   0   1.165
+	H   0   0   2.229
+}
+

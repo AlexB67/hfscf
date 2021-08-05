@@ -1,0 +1,24 @@
+# O2 triplet UHF
+#basis_set = 6-31++G**
+basis_set = 6-311+G*
+scf_type = UHF
+#use_symmetry = true
+#use_puream = false
+initial_guess = SAD
+post_scf = MP2
+gradient_type = MP2
+hessian_step_from_energy = 1e-3
+#geom_opt_algorithm = CGSD
+geom_opt = MP2
+geom_opt_tol = MEDIUM
+diis_range = 5
+energy_tol = 1.0E-8
+rms_tol = 1.0E-08
+frequencies = MP2
+multiplicity = 3
+units = angstrom
+{
+    8 0.0000 0.0000 0.0000
+    8 1.2100 0.0000 0.0000
+}
+

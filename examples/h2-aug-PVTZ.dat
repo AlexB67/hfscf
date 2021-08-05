@@ -1,0 +1,12 @@
+# H2 RHF/aug-cc-PVTZ mp2
+scf_type = RHF
+initial_guess = CORE  
+basis_set = aug-cc-PVTZ
+use_symmetry = true
+post_scf = MP2
+diis_range = 5
+units = angstrom
+{
+	H     0.000   0.0000 -0.7414
+	H     0.000   0.0000  0.7414
+}

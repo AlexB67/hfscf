@@ -1,0 +1,14 @@
+# Water ZMAT test
+diis_range = 5
+energy_tol = 1.0e-08
+rms_tol = 1.0e-08
+gradient_type = SCF
+units = angstrom
+{
+	O
+	H 1 1.1
+	H 1 1.1 2 104.0
+}
+
+
+

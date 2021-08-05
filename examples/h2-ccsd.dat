@@ -1,0 +1,10 @@
+# H2 RHF/CCSD
+scf_type = RHF
+initial_guess = CORE
+basis_set = 6-311++g(3df,3pd) 
+diis_range = 0
+post_scf = CCSD
+{
+	1    -0.700  0.5860 0.0000
+	1     0.700  0.5860 0.0000
+}

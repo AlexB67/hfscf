@@ -1,0 +1,16 @@
+*
+!/basis/
+!/basis/**
+!/src
+!/src/**
+!/subprojects
+!/subprojects/**
+!/examples
+!/examples/**
+!CMakeLists.txt
+!COPYING
+!meson.build
+!hfscf_cmake_config.h.in
+!hfscf_meson_config.h.in
+!README.md
+!.gitignore

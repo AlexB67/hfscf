@@ -1,0 +1,15 @@
+# Water polarizabilities 
+basis_set = 6-31++G** 
+diis_range = 5
+ccsd_diis_range = 5
+energy_tol = 1.0e-08
+rms_tol = 1.0e-08
+electronic_properties = true
+mol_props_cphf_iter = true
+units = angstrom
+{
+	O    0.000000000  -0.075791844   0.000000000
+	H    0.866811829   0.601435779   0.000000000
+	H   -0.866811829   0.601435779   0.000000000	
+}
+

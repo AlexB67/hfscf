@@ -1,0 +1,23 @@
+# co2 frequencies
+symmetrize_geom = true
+basis_set =  6-311++G
+use_symmetry = true
+initial_guess = SAD
+diis_range = 5
+energy_tol = 1.0e-9
+rms_tol = 1.0e-9
+eri_screen = false
+electronic_properties = true
+frequencies = SCF
+#thermo_chem_pressure = 100000.0
+#thermo_chem_temperature = 273.15
+geom_opt = SCF
+geom_opt_tol = HIGH
+gradient_type = SCF
+units = angstrom
+{
+   O   0.000000000000     0.000000000000     1.1621
+   C   0.000000000000     0.000000000000     0.0000
+   O   0.000000000000     0.000000000000    -1.1621
+}
+

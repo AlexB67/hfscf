@@ -1,0 +1,13 @@
+# HeH+ ion RHF/CCSD
+diis_range = 0
+#basis_set = 6-311++G(3df,3pd)
+ccsd_diis_range = 0
+charge = 1
+multiplicity = 1
+post_scf = CCSD
+units = angstrom
+{
+    H      0.9295  0.0000 0.00000
+    He    -0.0000  0.0000 0.00000
+}
+

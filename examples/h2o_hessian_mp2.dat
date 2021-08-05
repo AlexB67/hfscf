@@ -1,0 +1,20 @@
+# Water RHF/cc-PVDZ geom opt Hessian MP2
+#symmetrize_geom = true
+basis_set = cc-PVDZ
+initial_guess = SAD
+use_symmetry = true
+diis_range = 5
+post_scf = MP2
+energy_tol = 1.0e-9
+rms_tol = 1.0e-9
+integral_tol = 1.0e-14
+geom_opt = MP2
+geom_opt_tol = HIGH
+#geom_opt_stepsize = 1.0
+frequencies = MP2
+gradient_type = MP2
+{
+   O  -0.000000000003     0.000000000000    -0.112929827494
+   H  -1.483747300978     0.000000000000     0.896139156594
+   H   1.483747301023     0.000000000000     0.896139156604
+}

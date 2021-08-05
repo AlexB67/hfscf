@@ -1,0 +1,21 @@
+# ammonia RHF/cc-PVDZ
+scf_type = RHF
+initial_guess = SAD
+basis_set = cc-pVDZ
+#post_scf = MP2
+use_symmetry = true
+#point_group_override = Cs
+soscf = true
+eri_screen = false
+diis_range = 8
+density_damp = 1.0
+energy_tol = 0.5E-08
+units = angstrom
+{
+   X
+   N 1 1.00
+   H 2 1.02 1 111.1
+   H 2 1.02 1 111.1 3 120.0
+   H 2 1.02 1 111.1 3 240.0
+}
+

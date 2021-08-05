@@ -1,0 +1,15 @@
+# Water RHF/6-31++G** DIIS / MP2
+scf_type = RHF
+initial_guess = SAD
+basis_set = cc-pVDZ
+diis_range = 6
+use_symmetry = true
+density_damp = 1.0
+rms_tol = 0.5E-09
+units = angstrom
+{
+    8    0.000000000   -0.075791844    0.000000
+    1    0.866811829    0.601435779    0.000000
+    1   -0.866811829    0.601435779    0.000000
+}
+

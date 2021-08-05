@@ -1,0 +1,15 @@
+#  formaldehyde CIS exc energies
+basis_set = cc-pVTZ
+initial_guess = SAD 
+diis_range = 5
+ci_type = CIS
+energy_tol = 1.0e-08
+rms_tol = 1.0e-08
+units = angstrom
+{
+   C
+   O 1 1.21289414
+   H 1 1.10017879 2 121.7009888 
+   H 1 1.10017879 2 121.7009888 3 180.0
+}
+

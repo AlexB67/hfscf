@@ -1,0 +1,26 @@
+# acetone RHF/6-31++G** MP2.
+scf_type = RHF
+initial_guess = SAD
+basis_set = 6-31++G**
+use_symmetry = true
+symmetrize_geom = true
+#soscf = true
+use_puream = true
+post_scf = MP2
+diis_range = 8
+rms_tol = 1E-08
+multiplicity = 1
+charge = 0
+units = angstrom
+{
+	8         -2.33948        1.40907       -1.24785
+	6         -1.14688        1.65133       -1.42692	
+	6         -0.43410        1.22306       -2.68106
+	6         -0.32914        2.39049       -0.40258
+	1         -1.13128        0.69945       -3.34103
+	1          0.38488        0.54677       -2.42411
+	1         -0.04795        2.10291       -3.20150
+	1         -0.95635        2.64508        0.45624
+	1          0.06079        3.31235       -0.84104
+	1          0.49362        1.75621       -0.06365
+}

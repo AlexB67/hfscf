@@ -1,0 +1,14 @@
+# H2 RHF/STO-3G CCSD
+scf_type = RHF
+initial_guess = CORE
+use_symmetry = true
+basis_set = 6-311++g(3df,3pd)
+diis_range = 3
+#gradient_type = SCF
+geom_opt = SCF
+frequencies = SCF
+{
+	H  0.0 0.0 -0.7
+	H  0.0 0.0  0.7
+}
+

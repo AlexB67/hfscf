@@ -1,0 +1,20 @@
+# methane RHF/6-311++g(2d,2p)  MP3. The whole shebang.
+scf_type = RHF
+initial_guess = CORE
+basis_set = 6-311++g(2d,2p)
+post_scf = MP3
+diis_range = 5
+density_damp = 1.0
+rms_tol = 0.5E-07
+gradient_type = SCF
+electronic_properties = true
+use_symmetry = true
+#frequencies = SCF
+units = bohr
+{
+    6  -0.000000000000   0.000000000000   0.000000000000
+    1   1.183771681898  -1.183771681898  -1.183771681898
+    1   1.183771681898   1.183771681898   1.183771681898
+    1  -1.183771681898   1.183771681898  -1.183771681898
+    1  -1.183771681898  -1.183771681898   1.183771681898
+}

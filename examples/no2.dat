@@ -1,0 +1,27 @@
+# NO2 UHF/6-31G** MP3, SCF grad
+scf_type = UHF
+initial_guess = SAD
+#basis_set = 6-31G**
+basis_set = 6-311G*
+symmetrize_geom = true
+use_symmetry = true
+soscf = true
+rms_tol = 1e-9
+energy_tol = 1e-09
+#grad_step_from_energy = 1e-6
+gradient_type = SCF 
+diis_range = 6
+multiplicity = 2
+charge = 0
+post_scf = MP3
+units = angstrom
+{
+    N  0.0000	0.0000	0.0000
+    O  0.0000   1.0989	0.4653
+    O  0.0000  -1.0989	0.4653
+}
+
+# old test geom Cs symmetry
+# O           -0.285586384181    -0.339051951301     0.000000000000    15.994914619570
+# O            0.813146835819    -0.286276011301     0.000000000000    15.994914619570
+# N           -0.602602284181     0.714276548699     0.000000000000    14.003074004430

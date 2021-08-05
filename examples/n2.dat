@@ -1,0 +1,21 @@
+# N2 RHF/6-31++G** MP2
+scf_type = RHF
+symmetrize_geom = true
+initial_guess = CORE
+#basis_set = 6-31++G**
+basis_set = 6-311++G*
+use_symmetry = true
+electronic_properties = true
+post_scf = MP2
+geom_opt = MP2
+geom_opt_tol = HIGH
+#geom_opt_stepsize = 1.0
+#geom_opt_algorithm = CGSD
+gradient_type = MP2
+frequencies = MP2
+{
+    7 0.0000 0.0000 0.0000
+    7 2.147932 0.0000 0.0000
+}
+
+

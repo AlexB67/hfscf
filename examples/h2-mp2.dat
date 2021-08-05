@@ -1,0 +1,16 @@
+# H2 RHF/6-311++G(2d,2p) mp2
+scf_type = RHF
+initial_guess = CORE
+basis_set = 6-311++G(2d,2p)
+post_scf = MP2
+diis_range = 5
+density_damp = 1.0
+rms_tol = 0.5E-08
+energy_tol = 1.E-10
+multiplicity = 1
+charge = 0
+{
+	1    -0.700  0.0000 0.0000
+	1     0.700  0.000: 0.0000
+}
+

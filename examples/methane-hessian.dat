@@ -1,0 +1,23 @@
+# methane RHF/6-31G**
+scf_type = RHF
+initial_guess = CORE
+basis_set = 6-31+G**
+symmetrize_geom = true
+post_scf = MP2
+diis_range = 5
+density_damp = 1.0
+rms_tol = 1.0E-09
+energy_tol = 1.0E-09
+geom_opt = MP2
+geom_opt_tol = HIGH
+geom_opt_stepsize = 1.0
+gradient_type = MP2
+frequencies = MP2
+units = bohr
+{
+    6  -0.000000000000   0.000000000000   0.000000000000
+    1   1.183771681898  -1.183771681898  -1.183771681898
+    1   1.183771681898   1.183771681898   1.183771681898
+    1  -1.183771681898   1.183771681898  -1.183771681898
+    1  -1.183771681898  -1.183771681898   1.183771681898
+}

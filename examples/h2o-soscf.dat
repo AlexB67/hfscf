@@ -1,0 +1,22 @@
+# Water RHF/cc-pVDZ
+basis_set = cc-pVDZ
+scf_type = RHF
+use_symmetry = true
+soscf = true
+max_soscf_iter = 5
+eri_screen = false
+initial_guess = SAD
+diis_range = 6
+energy_tol = 1.0e-08
+rms_tol = 1.0e-09
+#post_scf = MP2
+#electronic_properties = true
+#gradient_type = SCF
+#frequencies = SCF
+units = angstrom
+{
+	O    0.000000000  0.00 -0.075791844
+	H    0.866811829  0.00  0.601435779
+	H   -0.866811829  0.00  0.601435779	
+}
+

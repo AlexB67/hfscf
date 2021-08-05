@@ -1,0 +1,15 @@
+# O UHF
+#basis_set = 6-31G
+scf_type = UHF
+initial_guess = CORE
+#uhf_guess_mix = true
+diis_range = 6
+energy_tol = 1.0E-6
+rms_tol = 1.0E-06
+multiplicity = 3
+charge = 0
+units = bohr
+{
+    O 0.0000 0.0000  0.0
+}
+

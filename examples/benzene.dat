@@ -1,0 +1,32 @@
+# Benzene HF/6-31G 
+initial_guess = SAD
+#post_scf = MP2
+diis_range = 5
+#soscf = true
+basis_set = 6-31G
+integral_tol = 1E-14
+use_puream = true
+#use_symmetry = true
+# adjust structure to fit point group exactly
+symmetrize_geom = true
+point_group_threshold = TIGHT
+#freeze_core = false
+#gradient_type = SCF
+#frequencies = SCF
+#geom_opt = SCF
+units = angstrom
+{
+	6  0.000  1.396  0.000
+	6  1.209  0.698  0.000
+	6  1.209 -0.698  0.000
+	6  0.000 -1.396  0.000
+	6 -1.209 -0.698  0.000
+	6 -1.209  0.698  0.000
+	1  0.000  2.479  0.000
+	1  2.147  1.240  0.000
+	1  2.147 -1.240  0.000
+	1  0.000 -2.479  0.000
+	1 -2.147 -1.240  0.000
+	1 -2.147  1.240  0.000
+}
+

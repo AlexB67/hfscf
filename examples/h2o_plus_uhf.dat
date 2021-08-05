@@ -1,0 +1,11 @@
+# Water H2O+ ion UHF/STO-3G
+scf_type = UHF
+multiplicity = 2
+charge = 1
+diis_range = 6
+units = angstrom
+{
+    8        0.00000        0.00000        0.00000
+    1        0.90000        0.00000        0.00000
+    1       -0.22534        0.87133        0.00000
+}

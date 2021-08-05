@@ -1,0 +1,19 @@
+# O2 triplet UHF/3-21G
+scf_type = UHF
+initial_guess = SAD
+basis_set = 6-311G
+use_symmetry = true
+#electronic_properties = true
+soscf = true
+multiplicity = 3
+charge = 0
+diis_range = 5
+energy_tol = 1.0E-9
+rms_tol = 1.0E-9
+post_scf = MP3
+units = angstrom
+{
+    O
+    O 1 1.21
+}
+

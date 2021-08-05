@@ -1,0 +1,8 @@
+# H2 UHF/STO-6G
+scf_type = UHF
+basis_set = STO-6G
+diis_range = 0
+{
+    1    -0.700   0.5860 0.0000
+    1     0.700   0.5860 0.0000
+}

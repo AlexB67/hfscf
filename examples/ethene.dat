@@ -1,0 +1,22 @@
+# ethene SCF frequencies 
+scf_type = RHF
+initial_guess = SAD
+basis_set = 6-31+G**
+#use_symmetry = true
+gradient_type = SCF
+eri_screen = false
+symmetrize_geom = true
+geom_opt = SCF 
+geom_opt_tol = HIGH
+#geom_opt_stepsize = 1.0
+frequencies = SCF
+units = angstrom
+{
+	C 
+	C    1  1.3358
+	H    1  1.0855   2 121.051
+	H    1  1.0855   2 121.051   3 180.000
+	H    2  1.0855   1 121.051   3   0.000
+	H    2  1.0855   1 121.051   3 180.000
+}
+

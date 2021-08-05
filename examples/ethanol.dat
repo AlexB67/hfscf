@@ -1,0 +1,29 @@
+# ethanol RHF/6-31G*
+scf_type = RHF
+initial_guess = CORE
+symmetrize_geom = true
+# Fails to determine point goup with default thresholds
+point_group_threshold = RELAXED
+basis_set = 6-31G*
+diis_range = 5
+density_damp = 1.0
+rms_tol = 0.5E-07
+electronic_properties = true
+gradient_type = SCF
+geom_opt = SCF
+geom_opt_tol = MEDIUM
+geom_opt_write_xyz = true
+frequencies = SCF
+units = angstrom
+{
+    C  1.0203    0.8860    0.9741
+    C  1.8788    1.9888    1.5710
+    O  3.1962    1.4725    1.7389
+    H -0.0079    1.2345    0.8257
+    H  1.0019    0.0158    1.6384
+    H  1.4249    0.5693    0.0072
+    H  1.8798    2.8664    0.9035
+    H  1.4551    2.3134    2.5359
+    H  3.7448    2.1751    2.1191  
+}
+

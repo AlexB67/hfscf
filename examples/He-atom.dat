@@ -1,0 +1,12 @@
+# O2 triplet UHF
+basis_set =  3-21G
+scf_type = RHF
+initial_guess = CORE
+diis_range = 3
+energy_tol = 1.0E-9
+rms_tol = 1.0E-09
+units = angstrom
+{
+    He  0.0000 0.0000 0.0000
+}
+

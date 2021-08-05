@@ -1,0 +1,22 @@
+# HCCF (my PhD) HF/6-31+G** Hessian
+basis_set = 6-31+G**
+#basis_set = 6-311++g(2d,2p)
+#use_symmetry = true
+post_scf = MP2
+diis_range = 5
+geom_opt = MP2
+geom_opt_tol = HIGH
+gradient_type = MP2
+eri_screen = true
+#hessian_step_from_grad = 5.0E-05
+rms_tol = 1.0E-09
+energy_tol = 1.0E-09
+frequencies = MP2
+units = bohr
+{
+   F    0.000000000000    0.000000000000    2.067697459894
+   C    0.000000000000    0.000000000000   -0.331060547008
+   C    0.000000000000    0.000000000000   -2.560004302856
+   H    0.000000000000    0.000000000000   -4.554532400421
+}
+

@@ -1,0 +1,14 @@
+# Carbon monoxide RHF/6-31++G**
+basis_set = 6-31++G**
+diis_range = 5
+initial_guess = SAD
+#post_scf = CCSD
+geom_opt = SCF
+geom_opt_tol = HIGH
+geom_opt_stepsize = 0.8
+#gradient_type = SCF
+frequencies = SCF
+{
+  O   0   0   0
+  C   0   0   2.1316111
+}

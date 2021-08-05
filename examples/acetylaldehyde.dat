@@ -1,0 +1,27 @@
+# acetylaldehyde RHF/6-31G*
+scf_type = RHF
+initial_guess = CORE
+symmetrize_geom = true
+# Fails to determine point goup with default thresholds
+point_group_threshold = RELAXED
+basis_set = 6-311G
+use_symmetry = true
+diis_range = 5
+density_damp = 1.0
+rms_tol = 0.5E-07
+electronic_properties = true
+gradient_type = SCF
+geom_opt = SCF
+geom_opt_tol = HIGH
+frequencies = SCF
+units = angstrom
+{
+  O  1.1443    0.2412    0.0000
+  C -1.2574    0.1815    0.0000
+  H -1.7938   -0.1493    0.8924
+  C  0.1130   -0.4226    0.0000
+  H -1.1865    1.2719    0.0016
+  H -1.7928   -0.1468   -0.8938
+  H  0.1478   -1.5252   -0.0007
+}
+
