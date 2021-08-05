@@ -98,7 +98,7 @@ mkdir m_releasebuild/
 meson m_releasebuild/ --buildtype=release
 ninja -C m_releasebuild/
 ```
-<p>Note: Do not mix meson and cmake build directories. I have given the build directories unique names as described above; You can use whatever build directory names you like.</p>
+<p>Note: Do not mix meson and cmake build directories. I have given the build directories unique names as described above. You can use whatever build directory names you like.</p>
 
 ## Using the software
 <p>For more information how to use the software, see the examples directory or consult the manual. You can run the program from the build directory. Installation is not necessary and unsupported.</p>
@@ -167,7 +167,7 @@ units = angstrom
 
 
 ```
-dummy atoms are denoted by the symbol Z. A Cartesian input will look like
+dummy atoms are denoted by the symbol X. A Cartesian input will look like
 
 ```
 # Benzene HF/6-311G no dummy atoms
