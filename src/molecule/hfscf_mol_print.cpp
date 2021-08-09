@@ -113,6 +113,11 @@ void MOLEC::Molecule::print_info(const bool post_geom_opt)
 		std::cout << "  CCSD DIIS range            = ";
 		(hf_settings::get_ccsd_diis_size() == 0) ? std::cout << "off" : std::cout << hf_settings::get_ccsd_diis_size();
 		std::cout << '\n';
+		std::cout << "  CCSD Max iterations        = " << hf_settings::get_max_ccsd_iterations() << "\n";
+		std::cout << "  CCSD Max RMS               = "
+		          << std::setprecision(2) << std::scientific << hf_settings::get_ccsd_rms_tol() << "\n";
+		std::cout << "  CCSD energy tolerance      = " 
+		          << std::setprecision(2) << std::scientific << hf_settings::get_ccsd_energy_tol() << "\n";
 	}
 
 	if(hf_settings::get_gradient_type().length())
@@ -145,7 +150,7 @@ void MOLEC::Molecule::print_info(const bool post_geom_opt)
 		if ("UHF" == hf_settings::get_hf_type() && "MP2" == hf_settings::get_frequencies_type())
 		{
 			std::cout << "  Hessian 2nd derivative     = Numeric from SCF-MP2 energy\n";
-			std::cout << "  Hessian energy stepsize    = " << std::scientific << std::setprecision(1) <<
+			std::cout << "  Hessian energy stepsize    = " << std::scientific << std::setprecision(2) <<
 			hf_settings::get_hessian_step_from_energy() << "\n";
 		}
 		else
@@ -153,8 +158,8 @@ void MOLEC::Molecule::print_info(const bool post_geom_opt)
 			if ("RHF" == hf_settings::get_hf_type() && hf_settings::get_frequencies_type().length())
 				std::cout << "  Hessian 2nd derivative     = analytic\n";
 			else
-				std::cout << "  Hessian 2nd derivative     = analytic\n"
-				          << "  Hessian gradient stepsize  = " << std::scientific << std::setprecision(1) <<
+				std::cout << "  Hessian 2nd derivative     = numeric\n"
+				          << "  Hessian gradient stepsize  = " << std::scientific << std::setprecision(2) <<
 				hf_settings::get_hessian_step_from_grad() << "\n";
 		}
 	}

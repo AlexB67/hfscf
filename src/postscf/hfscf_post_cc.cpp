@@ -112,10 +112,10 @@ std::pair<double, double> POSTSCF::post_scf_ccsd::calc_ccsd(const Eigen::Ref<con
         delta = e_ccsd - previous_e_ccsd;
         delta_energies.emplace_back(delta);
 
-        if( std::fabs<double>(delta) < HF_SETTINGS::hf_settings::get_energy_tol() && 
-            ccsd_rms[iteration] < HF_SETTINGS::hf_settings::get_rms_tol() )
+        if( std::fabs<double>(delta) < HF_SETTINGS::hf_settings::get_ccsd_energy_tol() && 
+            ccsd_rms[iteration] < HF_SETTINGS::hf_settings::get_ccsd_rms_tol() )
             break;
-        else if(HF_SETTINGS::hf_settings::get_max_scf_iterations() == iteration) 
+        else if(HF_SETTINGS::hf_settings::get_max_ccsd_iterations() == iteration) 
         {
             std::cout << "  Warning: Maximum iterations reached during CCSD DIIS convergence, aborting.\n";
             exit(EXIT_FAILURE);

@@ -103,6 +103,11 @@ void hf_settings::set_max_scf_iterations(const int max_scf_iter)
     m_max_scf_iter = abs(max_scf_iter);
 }
 
+void hf_settings::set_max_ccsd_iterations(const int max_ccsd_iter)
+{
+    m_max_ccsd_iter = abs(max_ccsd_iter);
+}
+
 void hf_settings::set_max_sad_iterations(const int max_sad_iter)
 {
     m_max_sad_iter = abs(max_sad_iter);
@@ -131,6 +136,17 @@ void hf_settings::set_rms_tol(const double rms_tol)
     }
     else
         m_rms_tol = fabs(rms_tol); 
+}
+
+void hf_settings::set_ccsd_rms_tol(const double ccsd_rms_tol) 
+{ 
+    if (fabs(ccsd_rms_tol) > 1e-6)
+    {
+        std::cout << "  Warning: SCF RMS tolerance too large. Adjusted to 1E-5\n";
+        m_ccsd_rms_tol = 1e-6;
+    }
+    else
+        m_ccsd_rms_tol = fabs(ccsd_rms_tol); 
 }
 
 void hf_settings::set_sad_rms_tol(const double sad_rms_tol) 
@@ -166,6 +182,17 @@ void hf_settings::set_energy_tol(const double energy_tol)
     } 
     else
         m_energy_tol = fabs(energy_tol);
+}
+
+void hf_settings::set_ccsd_energy_tol(const double ccsd_energy_tol) 
+{ 
+    if (fabs(ccsd_energy_tol) > 1e-6) 
+    {
+        std::cout << "\n  Warning: CCSD energy tolerance too large. Adjusted to 1E-6\n";
+        m_ccsd_energy_tol = 1e-6;
+    } 
+    else
+        m_ccsd_energy_tol = fabs(ccsd_energy_tol);
 }
 
 void hf_settings::set_sad_energy_tol(const double sad_energy_tol) 
@@ -429,6 +456,11 @@ std::string& hf_settings::get_ci_type()
     return m_ci_type; 
 }
 
+double hf_settings::get_ccsd_rms_tol() 
+{ 
+    return m_ccsd_rms_tol; 
+}
+
 double hf_settings::get_rms_tol() 
 { 
     return m_rms_tol; 
@@ -442,6 +474,11 @@ double hf_settings::get_sad_rms_tol()
 double hf_settings::get_soscf_rms_tol() 
 { 
     return m_soscf_rms_tol;
+}
+
+double hf_settings::get_ccsd_energy_tol() 
+{ 
+    return m_ccsd_energy_tol; 
 }
 
 double hf_settings::get_energy_tol() 
@@ -607,6 +644,11 @@ int hf_settings::get_diis_size()
 int hf_settings::get_max_scf_iterations()
 {
     return m_max_scf_iter;
+}
+
+int hf_settings::get_max_ccsd_iterations()
+{
+    return m_max_ccsd_iter;
 }
 
 int hf_settings::get_max_sad_iterations()

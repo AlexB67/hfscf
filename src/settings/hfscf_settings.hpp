@@ -28,9 +28,11 @@ namespace HF_SETTINGS
 
             inline static double        m_scf_damping{1.0}; // i.e no damping
             inline static double        m_rms_tol{1.0E-07};
+            inline static double        m_ccsd_rms_tol{1.0E-07};
             inline static double        m_soscf_rms_tol{5.0E-03};
             inline static double        m_sad_rms_tol{1.0E-06};
             inline static double        m_energy_tol{1.0E-07};
+            inline static double        m_ccsd_energy_tol{1.0E-7};
             inline static double        m_sad_energy_tol{1.0E-05};
             inline static double	    m_integral_tol{1.0E-14};
             inline static double	    m_geom_opt_stepsize{0.5}; // CG only
@@ -42,6 +44,7 @@ namespace HF_SETTINGS
             inline static int           m_diis_size{5};
             inline static int           m_ccsd_diis_size{5};
             inline static int           m_max_scf_iter{50};
+            inline static int           m_max_ccsd_iter{30};
             inline static int           m_max_sad_iter{25};
             inline static int           m_max_soscf_iter{4};
             inline static int           m_max_geomopt_iter{15};
@@ -77,11 +80,13 @@ namespace HF_SETTINGS
             static void set_scf_damping_factor(const double scf_damping);
             static void set_diis_size(const int diis_size);
             static void set_max_scf_iterations(const int max_scf_iter);
+            static void set_max_ccsd_iterations(const int max_ccsd_iter);
             static void set_max_sad_iterations(const int max_sad_iter);
             static void set_max_soscf_iterations(const int max_soscf_iter);
             static void set_max_geomopt_iterations(const int max_geomopt_iter);
             static void set_ccsd_diis_size(const int diis_size);
             static void set_rms_tol(const double rms_tol);
+            static void set_ccsd_rms_tol(const double ccsd_energy_tol);
             static void set_sad_rms_tol(const double sad_rms_tol);
             static void set_soscf_rms_tol(const double soscf_rms_tol);
             static void set_integral_tol(const double threshold);
@@ -89,6 +94,7 @@ namespace HF_SETTINGS
             static void set_hessian_step_from_energy(const double energy_step);
             static void set_grad_step_from_energy(const double energy_step);
             static void set_energy_tol(const double scf_energy_tol);
+            static void set_ccsd_energy_tol(const double ccsd_energy_tol);
             static void set_sad_energy_tol(const double sad_energy_tol);
             static void set_geom_opt_stepsize(const double geom_opt_stepsize);
             static void set_thermo_chem_temperature(const double temperture);
@@ -137,9 +143,11 @@ namespace HF_SETTINGS
             static std::string& get_point_group_equivalence_threshold();
             static std::string& get_point_group();
             static std::string& get_geom_opt_trajectory_file();
+            static double get_ccsd_rms_tol();
             static double get_rms_tol();
             static double get_sad_rms_tol();
             static double get_soscf_rms_tol();
+            static double get_ccsd_energy_tol();
             static double get_energy_tol();
             static double get_sad_energy_tol();
             static double get_scf_damping_factor();
@@ -153,6 +161,7 @@ namespace HF_SETTINGS
             static int get_diis_size();
             static int get_ccsd_diis_size();
             static int get_max_scf_iterations();
+            static int get_max_ccsd_iterations();
             static int get_max_sad_iterations();
             static int get_max_soscf_iterations();
             static int get_max_geomopt_iterations();
