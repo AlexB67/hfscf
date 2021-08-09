@@ -129,7 +129,7 @@ src/hfscf --help
 ```
 ## Preparing an input file
 
-<p>Input files are in text format. The first line is comment line. This is mandatory. Any other comment lines are optional and start with the  # symbol in column 1. Keywords are always in the form 
+<p>Input files are in text format. The first line is comment line. this is mandatory, any other comment lines are optional and start with the  # symbol. Keywords are always in the form 
 
 ```
 keyword = value

@@ -20,7 +20,6 @@ namespace Keywords
         {"ci_type", "CIS"}, {"ci_type", "RPA"},
         {"geom_opt_tol", "VERYHIGH"}, {"geom_opt_tol", "HIGH"}, {"geom_opt_tol", "MEDIUM"}, {"geom_opt_tol", "LOW"},
         {"geom_opt", "SCF"}, {"geom_opt", "MP2"},
-        {"point_group_equivalence_threshold", "SCF"}, {"geom_opt", "MP2"},
         {"geom_opt_algorithm", "RFO"}, {"geom_opt_algorithm", "CGSD"},
         {"frequencies", "SCF"}, {"frequencies", "MP2"},
         {"units", "bohr"},  {"units", "angstrom"},
