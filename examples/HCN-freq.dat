@@ -5,7 +5,6 @@ use_symmetry = true
 diis_range = 5
 eri_screen = false
 geom_opt_tol = HIGH
-geom_opt_stepsize = 1.0
 geom_opt = SCF
 frequencies = SCF
 units = angstrom

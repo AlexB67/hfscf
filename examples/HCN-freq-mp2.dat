@@ -8,7 +8,6 @@ diis_range = 5
 eri_screen = false
 geom_opt = MP2
 geom_opt_tol = HIGH
-hessian_step_from_grad = 1.0E-05
 frequencies = MP2
 units = angstrom
 {

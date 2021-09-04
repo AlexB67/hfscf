@@ -5,7 +5,6 @@ diis_range = 5
 energy_tol = 1.0e-08
 rms_tol = 1.0e-08
 geom_opt = SCF
-#geom_opt_stepsize = 1.0
 geom_opt_tol = HIGH
 #geom_opt_write_xyz = true
 gradient_type = SCF
