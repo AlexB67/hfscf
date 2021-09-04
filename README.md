@@ -219,3 +219,4 @@ Make sure that the Psi4 format option is selected when downloading. You can plac
 ```
 hfscf/basis
 ```
+Note: You must remove the middle part of the filename, typically the names are *somebasis.0.gbs* or *somebasis.1.gbs*. remove the 0 or 1, so it becomes *somebasis.gbs*

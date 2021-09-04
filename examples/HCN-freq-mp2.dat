@@ -1,5 +1,5 @@
 # HCN Freq RHF/6-31+G**
-#basis_set = 6-31+G**
+basis_set = 6-31+G**
 initial_guess = SAD
 use_symmetry = true
 basis_set = cc-pVTZ
