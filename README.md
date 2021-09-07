@@ -212,7 +212,7 @@ The hfscf program will validate your input file. In most cases an error message 
 </p>
 
 ## Basis sets
-Basis sets are psi4 format compatible only, a number are already included. New basis set can be obtained from [the basis set exchange website](https://www.basissetexchange.org/). hfscf maximum supported angular momentum is L = 5 (H). Density fitted basis sets are not supported. 
+Basis sets are psi4 format compatible only, a number are already included. New basis sets can be obtained from [the basis set exchange website](https://www.basissetexchange.org/). hfscf maximum supported angular momentum is L = 5 (H). Density fitted basis sets are not supported. 
 
 Make sure that the Psi4 format option is selected when downloading. You can place a new basis in the basis set directory found at
 
