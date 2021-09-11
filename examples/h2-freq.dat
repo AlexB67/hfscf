@@ -1,4 +1,4 @@
-# H2 RHF/STO-3G CCSD
+# H2 RHF/6-311++g(3df,3pd) CCSD
 scf_type = RHF
 initial_guess = CORE
 use_symmetry = true

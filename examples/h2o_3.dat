@@ -1,4 +1,4 @@
-# Water RHF/6-31++G** DIIS / MP2
+# Water RHF/cc-pVDZ
 scf_type = RHF
 initial_guess = SAD
 basis_set = cc-pVDZ

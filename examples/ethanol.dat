@@ -2,8 +2,10 @@
 scf_type = RHF
 initial_guess = CORE
 symmetrize_geom = true
+
 # Fails to determine point goup with default thresholds
 point_group_threshold = RELAXED
+
 basis_set = 6-31G*
 diis_range = 5
 density_damp = 1.0

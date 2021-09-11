@@ -1,4 +1,4 @@
-# Water RHF/STO-3G with DIIS
+# Water RHF/ 6-31++G** CCSD grad
 basis_set = 6-31++G**
 post_scf = CCSD
 freeze_core = false

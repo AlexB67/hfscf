@@ -1,4 +1,4 @@
-# HCCH
+# HCCH MP2 freq
 initial_guess = SAD
 diis_range = 5
 basis_set = 6-311G

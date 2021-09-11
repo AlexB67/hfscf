@@ -1,4 +1,4 @@
-# Water RHF/6-31G Hessian
+# Water RHF/6-311++G Hessian
 #symmetrize_geom = true
 basis_set = 6-31G
 #basis_set =  6-311++G

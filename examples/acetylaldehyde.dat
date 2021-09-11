@@ -1,9 +1,11 @@
-# acetylaldehyde RHF/6-31G*
+# acetylaldehyde RHF/6-311G* freq props
 scf_type = RHF
 initial_guess = CORE
 symmetrize_geom = true
+
 # Fails to determine point goup with default thresholds
 point_group_threshold = RELAXED
+
 basis_set = 6-311G
 use_symmetry = true
 diis_range = 5
