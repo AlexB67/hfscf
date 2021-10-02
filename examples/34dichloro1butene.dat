@@ -1,4 +1,4 @@
-# 34dichloro1butene RHF 6-31G MP2
+# 34dichloro1butene RHF 6-31G MP3
 basis_set = 6-31G
 initial_guess = SAD
 post_scf = MP3

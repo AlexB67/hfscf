@@ -79,7 +79,7 @@ class Basisset
         int shell_ids{0}; // spherical index;
         std::string m_basis_set_name{"STO-3G"};
         std::string m_basis_coord_type{"cartesian"}; // Default: Basis set is Cartesian or Spherical;
-        Matrix1D<int> m_zval;                        // puream not yet supported. info only.
+        Matrix1D<int> m_zval;                        
         std::vector<Basisshell_data> m_shell_basis;
 };
 }
