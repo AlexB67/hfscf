@@ -4,6 +4,7 @@
 #include <map>
 #include <string>
 #include <string_view>
+#include <functional>
 #include "../settings/hfscf_settings.hpp"
 using HF_SETTINGS::hf_settings;
 
@@ -31,6 +32,7 @@ namespace Keywords
         {"geom_opt_constrain_angles", "true"},  {"geom_opt_constrain_angles", "false"},
         {"geom_opt_constrain_dihedrals", "true"},  {"geom_opt_constrain_dihedrals", "false"},
         {"geom_opt_constrain_oop", "true"},  {"geom_opt_constrain_oop", "false"},
+        {"geom_opt_guess_hessian", "SCHLEGEL"},  {"geom_opt_guess_hessian", "SIMPLE"},
         {"soscf", "true"},  {"soscf", "false"},
         {"geom_opt_write_xyz", "true"}, {"geom_opt_write_xyz", "false"},
         {"eri_screen", "true"}, {"eri_screen", "false"},
@@ -86,6 +88,7 @@ namespace Keywords
         {"geom_opt_constrain_angles", " expecting \"geom_opt_constrain_angles = true|false\""},
         {"geom_opt_constrain_dihedrals", " expecting \"geom_opt_constrain_dihedrals = true|false\""},
         {"geom_opt_constrain_oop", " expecting \"geom_opt_constrain_oop = true|false\""},
+        {"geom_opt_guess_hessian", " expecting \"geom_opt_guess_hessian = SCHLEGEL|SIMPLE\""},
         {"soscf", " expecting \"soscf = true|false\""},
         {"freeze_core", " expecting \"freeze_core = true|false\""},
         {"uhf_guess_mix", " expecting \"uhf_guess_mix = true|false\""},
@@ -129,6 +132,7 @@ namespace Keywords
         {"geom_opt", &hf_settings::set_geom_opt},
         {"geom_opt_algorithm", &hf_settings::set_geom_opt_algorithm},
         {"geom_opt_tol", &hf_settings::set_geom_opt_tol},
+        {"geom_opt_guess_hessian", &hf_settings::set_geom_opt_guess_hessian},
         {"ci_type", &hf_settings::set_ci_type},
         {"units", &hf_settings::set_unit_type},
         {"basis_set", &hf_settings::set_basis_set_name},

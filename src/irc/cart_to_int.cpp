@@ -39,7 +39,7 @@ void CART_INT::Cart_int::do_internal_coord_analysis()
     m_dihedral = std::vector<Dihedral>{dihedrals(dist, molecule)};
     m_linear_angle = std::vector<LinearAngle<vec3>>{linear_angles(dist, molecule)};
     m_out_of_plane_bend =  std::vector<OutOfPlaneBend>{out_of_plane_bends(dist, molecule)};
-
+    // doesn't do anything for now
     if (is_planar() || hf_settings::get_geomopt_constrain__oop_angles())
         for (size_t i = 0; i < m_out_of_plane_bend.size(); ++i)
             m_out_of_plane_bend[i].constraint = connectivity::Constraint::constrained;
@@ -51,7 +51,7 @@ void CART_INT::Cart_int::do_internal_coord_analysis()
     if (hf_settings::get_geomopt_constrain__angles())
         for (size_t i = 0; i < m_angle.size(); ++i)
             m_angle[i].constraint = connectivity::Constraint::constrained;
-    
+    // end do nothing
     num_irc = m_bond.size() + m_angle.size() + m_dihedral.size() + m_linear_angle.size() + m_out_of_plane_bend.size();
 
     ircs = std::make_unique<IRC<vec3, vec, mat> >(molecule); // TODO be part of constructor
@@ -60,16 +60,19 @@ void CART_INT::Cart_int::do_internal_coord_analysis()
                                                                   m_linear_angle, m_out_of_plane_bend);
 }
 
-void CART_INT::Cart_int::print_bonding_info(bool print_projector, std::string new_title) const
+void CART_INT::Cart_int::print_bonding_info(bool print_projector, bool print_wilson, std::string new_title) const
 {
     int verbosity_level = (hf_settings::get_geom_opt().length()) ? 2 : 3;
 
     if(hf_settings::get_verbosity() > verbosity_level)
     {
-        std::cout << "\n  ************************************\n";
-        std::cout << "  *        Wilson B Matrix           *\n";
-        std::cout << "  ************************************\n";
-        HFCOUT::pretty_print_matrix<double>(B_mat);
+        if(print_wilson)
+        {
+            std::cout << "\n  ************************************\n";
+            std::cout << "  *        Wilson B Matrix           *\n";
+            std::cout << "  ************************************\n";
+            HFCOUT::pretty_print_matrix<double>(B_mat);
+        }
 
         if(print_projector)
         {
@@ -94,13 +97,29 @@ void CART_INT::Cart_int::print_bonding_info(bool print_projector, std::string ne
 
 void CART_INT::Cart_int::get_guess_hessian(EigenMatrix<double>& hessian, const std::string& type) const
 {
+    hessian =  EigenMatrix<double>::Zero(num_irc, num_irc);
+
     if(type == "SIMPLE")
-    {   // never used because Schlegel is da man !
-        hessian = ircs->projected_initial_hessian();
+    { 
+        constexpr double k_bond = 0.5;
+        constexpr double k_angle = 0.2;
+        constexpr double k_dihedral = 0.1;
+        std::size_t offset{0};
+
+        for (std::size_t i{0}; i < m_bond.size(); ++i) hessian(i, i) = k_bond;
+
+        offset = m_bond.size();
+        for (std::size_t i{0}; i < m_angle.size(); i++) hessian(i + offset, i + offset) = k_angle;
+
+        offset = m_bond.size() + m_angle.size();
+        for (std::size_t i{0}; i < m_dihedral.size(); i++) hessian(i + offset, i + offset) = k_dihedral;
+
+        offset = m_bond.size() + m_angle.size() + m_dihedral.size();
+        for (std::size_t i{0}; i < m_linear_angle.size(); i++) hessian(i + offset, i + offset) = k_angle;
+
         return;
     }
-
-    if(type != "SCHLEGEL")
+    else if(type != "SCHLEGEL")
     {
         std::cout << "\n\n  Error: Invalid request for guess hessian:  " << type << "\n";
         std::cout << "         SIMPLE and SCHLEGEL supported only.\n\n";
@@ -120,8 +139,6 @@ void CART_INT::Cart_int::get_guess_hessian(EigenMatrix<double>& hessian, const s
         else
             return 5;
     };
-
-    hessian =  EigenMatrix<double>::Zero(num_irc, num_irc);
 
     vec x_c{to_cartesian<vec3, vec>(molecule)};
 
@@ -246,10 +263,12 @@ void CART_INT::Cart_int::get_guess_hessian(EigenMatrix<double>& hessian, const s
         const double d = 1.0 - r1.dot(r23) / (r1.norm() * r2.norm() * r3.norm());
         // for planar, d should always be 1, the above is as such redundant for this case
         hessian(index, index) = oofp_angle * d * d * d * d;
-    }
+    } 
+
+
 }
 
-void CART_INT::Cart_int::do_bfsg_update(EigenMatrix<double>& hessian, 
+void CART_INT::Cart_int::do_bfgs_update(EigenMatrix<double>& hessian, 
                                         const Eigen::Ref<const EigenVector<double> >& del_irc_grad,
                                         const Eigen::Ref<const EigenVector<double> >& del_irc) const
 {
@@ -267,14 +286,15 @@ void CART_INT::Cart_int::do_bfsg_update(EigenMatrix<double>& hessian,
                            - H_del_irc(i) * H_del_irc(j) / dot_del_irc_H_del_irc;
             hessian(j, i)  = hessian(i, j);
         }
-    
+
     Eigen::LLT<Eigen::MatrixXd> lltOfA(hessian);
 
     if (lltOfA.info() == Eigen::NumericalIssue) // hopefully this shouldn't happen too often
     {
+        const std::string& hess_type = hf_settings::get_geom_opt_guess_hessian();
         std::cout << "\n\n  Positive definite test failed. BFGS Hessian step discarded.\n";
-        std::cout << "  Using new SCHLEGEL guess instead at current geometry.\n";
-        get_guess_hessian(hessian, "SCHLEGEL");
+        std::cout << "  Using new " << hess_type << " guess instead at current geometry.\n";
+        get_guess_hessian(hessian, hess_type);
     }
 }
 
@@ -292,11 +312,18 @@ void CART_INT::Cart_int::rfo_step(const Eigen::Ref<const EigenMatrix<double> >& 
 
     if(!irc_coords_old.size()) // compute new guess, first time visit in geom opt
     {
-        get_guess_hessian(hessian, "SCHLEGEL");
+        get_guess_hessian(hessian, hf_settings::get_geom_opt_guess_hessian());
+        
         std::cout << '\n';
         std::cout << "  ******************************************\n";
-        std::cout << "  *  Diagonal Guess Hessian (SCHLEGEL '84) *\n";
+        
+        if (hf_settings::get_geom_opt_guess_hessian() == "SCHLEGEL")
+            std::cout << "  *  Diagonal Guess Hessian (SCHLEGEL '84) *\n";
+        else
+            std::cout << "  *     Diagonal Guess Hessian (SIMPLE)    *\n";
+
         std::cout << "  ******************************************\n";
+
         for (Index i = 0; i < hessian.outerSize(); ++i)
         {
             std::cout << std::setw(10) << std::right << std::setprecision(6) << hessian(i, i);
@@ -318,6 +345,17 @@ void CART_INT::Cart_int::rfo_step(const Eigen::Ref<const EigenMatrix<double> >& 
 
         for(Index i = 0; i < del_irc_grad.size(); ++i)
         {
+            Index offset = m_bond.size() + m_angle.size();
+            // work around dihedral flip (I suspect a bug in irc library but this works for now) 
+            // TODO need irc fix
+            if (i >= offset && i <  offset + (Index) m_dihedral.size())
+            {
+                if (irc_coords_old(i) < 0 && irc_coords(i) > 0) irc_coords(i) = -irc_coords(i);
+                else if (irc_coords_old(i) > 0 && irc_coords(i) < 0) irc_coords(i) = -irc_coords(i);
+                
+                del_irc_coord(i) = irc_coords(i) - irc_coords_old(i);
+            }
+
             std::cout << std::setw(4) << std::right  << i + 1
             << std::setw(15) << std::right << std::setprecision(9) << irc_coords_old(i)
             << std::setw(15) << std::right << std::setprecision(9) << irc_coords(i)
@@ -327,13 +365,13 @@ void CART_INT::Cart_int::rfo_step(const Eigen::Ref<const EigenMatrix<double> >& 
             << std::setw(15) << std::right << std::setprecision(9) << del_irc_grad(i) << '\n';
         }
 
-        do_bfsg_update(hessian, del_irc_grad, del_irc_coord);
+        do_bfgs_update(hessian, del_irc_grad, del_irc_coord);
 
         if(hf_settings::get_verbosity() > 2)
         {
             std::cout << '\n';
             std::cout << "  **********************************\n";
-            std::cout << "  *  Hessian update from BFSG step *\n";
+            std::cout << "  *  Hessian update from BFGS step *\n";
             std::cout << "  **********************************\n";
             HFCOUT::pretty_print_matrix<double>(hessian);
         }
@@ -342,9 +380,9 @@ void CART_INT::Cart_int::rfo_step(const Eigen::Ref<const EigenMatrix<double> >& 
     std::cout << "\n  Projecting redundancies now (forces and hessian):\n";
 
     EigenMatrix<double> rfo_mat = EigenMatrix<double>::Zero(hessian.rows() + 1, hessian.rows() + 1);
-
+    vec irc_grad_P = get_irc_gradient(gradient_cart, true);
     mat tmp_hess = ircs->projected_hessian(hessian);
-    vec irc_grad_P = get_irc_gradient(gradient_cart, true);  // temporary for projection
+
     for (Index i = 0; i < hessian.rows(); ++i)
         for (Index j = i; j < hessian.cols(); ++j) 
         {
@@ -352,7 +390,7 @@ void CART_INT::Cart_int::rfo_step(const Eigen::Ref<const EigenMatrix<double> >& 
             if (i == j) rfo_mat(i, hessian.cols()) = rfo_mat(hessian.rows(), i) = irc_grad_P(i);
             rfo_mat(j, i) = rfo_mat(i, j);
         }
-
+ 
     if(hf_settings::get_verbosity() > 1)
     {
         std::cout << '\n';
@@ -450,7 +488,7 @@ CART_INT::Cart_int::get_irc_gradient(const Eigen::Ref<const EigenMatrix<double> 
         return irc_grad_p;
     }
     
-    const vec irc_grad = transformation::gradient_cartesian_to_irc<vec, mat>(grad_xc, B_mat);
+    const vec irc_grad = ircs->grad_cartesian_to_irc(grad_xc); //transformation::gradient_cartesian_to_irc<vec, mat>(grad_xc, B_mat);
     return irc_grad;
 }
 
@@ -489,19 +527,12 @@ void CART_INT::Cart_int::irc_to_cartesian(const Eigen::Ref<const EigenVector<dou
     }
 
     vec irc_back_transform = ircs->cartesian_to_irc(result.x_c);
-    // it seems libirc sometimes flips dihedrals with a different sign between transformations
-    // but it works okay. Don't think it is an issue.
-    // Lets tidy for printing to avoid confusion. TODO fix this in libirc or report bug?
-    Index offset = static_cast<Eigen::Index>(m_bond.size() + m_angle.size());
     vec error = vec(irc.size());
     for (Index i = 0; i < irc.size(); ++i)
-    {
-        if (i >= offset && i < (offset + static_cast<Eigen::Index>(m_dihedral.size())))
-            error(i) = fabs(irc_back_transform(i)) - fabs(irc(i) - del_irc(i));
-        else
-            error(i) = irc_back_transform(i) - irc(i) - del_irc(i);
-    }
-
+        error(i) = irc_back_transform(i) - irc(i) - del_irc(i);
+    
+    // same issue here with dihedral flips, 
+    // but it's only for printing, no damage done, see comments in rfo_step
     std::cout << "\n*****************************************\n";
     std::cout << "          Back transform validation of q\n";
     std::cout << "   #    q_expected        error\n";

@@ -156,10 +156,10 @@ bool Mol::scf_gradient::check_geom_opt(const std::vector<int>& zval, int natoms)
         {
             std::unique_ptr<CART_INT::Cart_int> intco = std::make_unique<CART_INT::Cart_int>(m_mol);
             intco->do_internal_coord_analysis();
-            intco->print_bonding_info(false, "\n  Current internal\n (redundant) coordinates: ");
+            intco->print_bonding_info(true, true, "\n  Current internal\n (redundant) coordinates: ");
             intco->rfo_step(gradient, irc_grad, irc_coords, irc_hessian);
             intco->do_internal_coord_analysis();
-            intco->print_bonding_info(false, "\n  New internal\n  (redundant) coordinates: ");
+            intco->print_bonding_info(false, false, "\n  New internal\n  (redundant) coordinates: ");
             
         }
         else if (hf_settings::get_geom_opt_algorithm() == "CGSD")

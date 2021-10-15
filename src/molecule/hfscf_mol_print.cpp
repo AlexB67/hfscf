@@ -75,7 +75,7 @@ void MOLEC::Molecule::print_info(const bool post_geom_opt)
 		if(hf_settings::get_geom_opt_algorithm() == "RFO")
 		{
 			std::cout << "  Geomopt RFO stepsize       = automatic\n";
-			std::cout << "  Geomopt guess Hessian      = SCHLEGEL\n";
+			std::cout << "  Geomopt guess Hessian      = " << hf_settings::get_geom_opt_guess_hessian() << "\n";
 		}
 		else
 			std::cout << "  Geomopt stepsize           = "  <<  hf_settings::get_geom_opt_stepsize() << "\n";

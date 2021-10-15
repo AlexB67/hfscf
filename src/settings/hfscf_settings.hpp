@@ -25,6 +25,7 @@ namespace HF_SETTINGS
             inline static std::string   m_frequencies{""};
             inline static std::string   m_point_group_equivalence_threshold{"DEFAULT"};
             inline static std::string   m_point_group{""};
+            inline static std::string   m_geom_opt_guess_hessian{"SCHLEGEL"};
 
             inline static double        m_scf_damping{1.0}; // i.e no damping
             inline static double        m_rms_tol{1.0E-07};
@@ -126,6 +127,7 @@ namespace HF_SETTINGS
             static void set_align_geom(const bool align_geom);
             static void set_use_symmetry(const bool use_symmetry);
             static void set_soscf(const bool enabe_soscf);
+            static void set_geom_opt_guess_hessian(const std::string& guess_hessian);
 
             static std::string& get_basis_set_name();
             static std::string& get_basis_set_path();
@@ -143,6 +145,7 @@ namespace HF_SETTINGS
             static std::string& get_point_group_equivalence_threshold();
             static std::string& get_point_group();
             static std::string& get_geom_opt_trajectory_file();
+            static std::string& get_geom_opt_guess_hessian();
             static double get_ccsd_rms_tol();
             static double get_rms_tol();
             static double get_sad_rms_tol();

@@ -9,7 +9,7 @@ geom_opt = MP2
 #geom_opt_write_xyz = true
 # adjust structure to fit point group exactly
 symmetrize_geom = true
-
+#geom_opt_guess_hessian = SIMPLE
 units = angstrom
 {
 	C  0.000000000 -0.000000000 -0.500000000

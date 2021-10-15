@@ -25,14 +25,6 @@ inline double pirange_rad(double angle) noexcept {
   }
 }
 
-/// Returns \param angle in the range \f$(-180,180]\f$
-///
-/// \param angle
-/// \return
-inline double pirange_deg(double angle) noexcept {
-  return pirange_rad(angle * conversion::deg_to_rad) * conversion::rad_to_deg;
-}
-
 /*! Check if two vectors @param v1 and @param v2 are collinear
  *
  * @tparam Vector3

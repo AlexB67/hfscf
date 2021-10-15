@@ -58,7 +58,7 @@ namespace CART_INT
                           EigenVector<double>& irc_coords, EigenVector<double>& irc_grad,
                           EigenMatrix<double>& hessian) const;
 
-            void print_bonding_info(bool print_projector = false, std::string new_title = {}) const;
+            void print_bonding_info(bool print_projector = false, bool print_wilson = false, std::string new_title = {}) const;
         
         private:
             private:
@@ -74,7 +74,7 @@ namespace CART_INT
             EigenMatrix<double> B_mat;
             EigenMatrix<double> G_mat;
 
-            void do_bfsg_update(EigenMatrix<double>& hessian,
+            void do_bfgs_update(EigenMatrix<double>& hessian,
                                 const Eigen::Ref<const EigenVector<double> >& del_irc_grad,
                                 const Eigen::Ref<const EigenVector<double> >& del_irc) const;
 

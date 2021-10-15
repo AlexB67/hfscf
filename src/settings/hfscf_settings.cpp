@@ -29,6 +29,11 @@ void hf_settings::set_guess_type(const std::string& inital_guess)
     m_initial_guess = inital_guess;
 }
 
+void hf_settings::set_geom_opt_guess_hessian(const std::string& guess_hessian)     
+{
+    m_geom_opt_guess_hessian = guess_hessian;
+}
+
 void hf_settings::set_unit_type(const std::string& unit)     
 {
     m_unit_type = unit;
@@ -454,6 +459,11 @@ std::string& hf_settings::get_gradient_type()
 std::string& hf_settings::get_ci_type() 
 { 
     return m_ci_type; 
+}
+
+std::string& hf_settings::get_geom_opt_guess_hessian()
+{ 
+    return m_geom_opt_guess_hessian; 
 }
 
 double hf_settings::get_ccsd_rms_tol() 

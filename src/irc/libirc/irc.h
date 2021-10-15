@@ -57,6 +57,13 @@ public:
   /// \return Gradient in redundant internal coordinates
   Vector grad_cartesian_to_projected_irc(const Vector& grad_c) const;
 
+  /// Transform gradient from cartesian coordinates redundant
+  /// internal coordinates.
+  ///
+  /// \param grad_c Gradient in cartesian coordinates
+  /// \return Gradient in redundant internal coordinates
+  Vector grad_cartesian_to_irc(const Vector& grad_c) const;
+
   /// Transform cartesian coordinates to redundant internal coordinates
   ///
   /// \param x_c Cartesian coordinates
@@ -415,6 +422,21 @@ Vector IRC<Vector3, Vector, Matrix>::grad_cartesian_to_projected_irc(
 
   return P *
          transformation::gradient_cartesian_to_irc<Vector, Matrix>(grad_c, B);
+}
+
+/// Transform gradient in cartesian coordinates to gradient in internal
+/// redundant coordinates 
+///
+/// \param grad_c Gradient in cartesian coordinates
+/// \return gradient in internal redundant coordinates
+template<typename Vector3, typename Vector, typename Matrix>
+Vector IRC<Vector3, Vector, Matrix>::grad_cartesian_to_irc(
+    const Vector& grad_c) const {
+  if (linalg::size(grad_c) != n_c) {
+    throw std::length_error("ERROR: Wrong cartesian gradient size.");
+  }
+
+  return transformation::gradient_cartesian_to_irc<Vector, Matrix>(grad_c, B);
 }
 
 template<typename Vector3, typename Vector, typename Matrix>
