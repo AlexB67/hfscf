@@ -95,7 +95,7 @@ namespace HFCOUT
         std::cout << "  *  Ve(uv|wz) / Eh              *\n";
         std::cout << "  ********************************\n";
         Index repsize = (Eigen::Index)num_bfs * (num_bfs + 1) * (num_bfs * num_bfs + num_bfs + 2) / 8;
-        std::cout << "  Total = " << repsize << " (Approx " << sizeof(double) * (repsize) / 1048576 << " MB) \n";
+        std::cout << "  Total = " << repsize << " (Approx " << sizeof(double) * (repsize) / 1048576 << "MB)\n";
     }
 
     // symmetry versions

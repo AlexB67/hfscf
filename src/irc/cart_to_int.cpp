@@ -504,8 +504,10 @@ void CART_INT::Cart_int::irc_to_cartesian(const Eigen::Ref<const EigenVector<dou
                                           bool do_geometry_analysis) const
 {
     vec x_c_previous{to_cartesian<vec3, vec>(molecule)};
+    const double tol = (hf_settings::get_geom_opt_algorithm() == "CGSD") ? 1E-10 : 1E-08;
+    const size_t cycles = (hf_settings::get_geom_opt_algorithm() == "CGSD") ? 40U : 30U;
 
-    const auto result = ircs->irc_to_cartesian(irc, del_irc, x_c_previous, 50, 1.0E-10);
+    const auto result = ircs->irc_to_cartesian(irc, del_irc, x_c_previous, cycles, tol);
     
     if(!result.converged)
         std::cout << "\n  Warning: IRC to cartesian back-step failed to converge after " 

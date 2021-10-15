@@ -445,7 +445,7 @@ void MolProps::Molprops::calc_static_polarizabilities_iterative(const Eigen::Ref
     ptensor(2, 1) = U_3.cwiseProduct(mo_y).sum(); ptensor(2, 1) *= 4.0;
     ptensor(2, 2) = U_3.cwiseProduct(mo_z).sum(); ptensor(2, 2) *= 4.0;
 
-    std::cout << "\n  Using iterative CPHF.\n";
+    std::cout << "\n  Polarizabilities: Using iterative CPHF.\n";
     std::cout << "  CPHF converged in " << iter << " iterations (DIIS range: 6).\n";
     std::cout << "  Max RMS: " << std::setprecision(6) << std::scientific << sqrt(max_rms) 
     <<  ", Average RMS: " << sqrt(average_rms) << "\n";
@@ -508,7 +508,7 @@ void MolProps::Molprops::calc_static_polarizabilities(const Eigen::Ref<const Eig
     EigenMatrix<double> G = EigenMatrix<double>::Zero(occ * virt, occ * virt);
     create_hessian_matrix(C, eps, eri, G);
 
-    EigenMatrix<double> Ginv = G.inverse();
+    EigenMatrix<double> Ginv = G.inverse(); G.resize(0, 0);
     EigenMatrix<double> U_x = EigenMatrix<double>::Zero(occ, virt);
     EigenMatrix<double> U_y = EigenMatrix<double>::Zero(occ, virt);
     EigenMatrix<double> U_z = EigenMatrix<double>::Zero(occ, virt);
@@ -534,7 +534,9 @@ void MolProps::Molprops::calc_static_polarizabilities(const Eigen::Ref<const Eig
     ptensor(2, 1) = U_z.cwiseProduct(mo_y).sum(); ptensor(2, 1) *= 4.0;
     ptensor(2, 2) = U_z.cwiseProduct(mo_z).sum(); ptensor(2, 2) *= 4.0;
 
-    std::cout << "\n  Using direct CPHF (via matrix inversion).\n";
+    std::cout << "\n Polarizabilities: Using direct CPHF (via matrix inversion).";
+    std::cout << "\n Electronic Hessian and inverse: Memory size " 
+              << 2 * sizeof(double) * (occ * virt) * (occ * virt) / 1048576 << "MB.\n";
 
     if (hf_settings::get_verbosity() > 4)
     {
