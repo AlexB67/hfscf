@@ -2,13 +2,13 @@
 scf_type = RHF
 initial_guess = SAD
 basis_set = 6-31+G**
-#use_symmetry = true
+use_symmetry = true
+use_puream = true
 gradient_type = SCF
 eri_screen = false
 symmetrize_geom = true
 geom_opt = SCF 
 geom_opt_tol = HIGH
-#geom_opt_stepsize = 1.0
 frequencies = SCF
 units = angstrom
 {

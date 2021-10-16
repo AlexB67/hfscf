@@ -55,6 +55,7 @@ struct IrcToCartesianResult {
   Vector x_c;
   bool converged;
   std::size_t n_iterations;
+  double rms;
 };
 
 /// Transform internal redundant displacements to cartesian coordinates
@@ -153,7 +154,7 @@ IrcToCartesianResult<Vector> irc_to_cartesian_single(
     x_c = x_c_old + iB * dq_irc;
   }
 
-  return {x_c, converged, n_iterations};
+  return {x_c, converged, n_iterations, RMS};
 }
 
 template<typename Vector3, typename Vector, typename Matrix>

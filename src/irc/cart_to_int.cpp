@@ -511,11 +511,15 @@ void CART_INT::Cart_int::irc_to_cartesian(const Eigen::Ref<const EigenVector<dou
     
     if(!result.converged)
         std::cout << "\n  Warning: IRC to cartesian back-step failed to converge after " 
-                  <<  result.n_iterations << " iterations.\n";
+                  <<  result.n_iterations << " iterations. RMS = " 
+                  <<  std::setprecision(3) << std::scientific << result.rms 
+                  << "\n  New cartesian coordinates: \n";
     else
     {
         std::cout << "\n  IRC to cartesian back-step converged in " 
-                  <<  result.n_iterations << " iterations.\n  New cartesian coordinates: \n";
+                  <<  result.n_iterations << " iterations. RMS = " 
+                  <<  std::setprecision(3) << std::scientific << result.rms 
+                  << "\n  New cartesian coordinates: \n";
     }
     
     const int natoms = static_cast<int>(m_mol->get_atoms().size());
@@ -542,14 +546,13 @@ void CART_INT::Cart_int::irc_to_cartesian(const Eigen::Ref<const EigenVector<dou
     for(Index i = 0; i < irc.size(); ++i)
     {
         std::cout << std::setw(4) << std::right << i + 1
-                  << std::setw(18) << std::right << std::setprecision(12) 
+                  << std::setw(18) << std::right << std::fixed << std::setprecision(12) 
                   << irc(i) + del_irc(i) << std::setw(18) << std::right
                   << error(i) << "\n";
     }
 
     if (hf_settings::get_use_symmetry())
-    {   // Hack: Keeps things under control since we are using symmetry, 
-        // but not symmetrized coordinates. TODO symmetrize coords
+    {   // Hack: Keeps things under control since we are using symmetry,
         // Doesn't always work, but better than without as things stand.
         // Often the current geom opt routine works best without symmetry.
         hf_settings::set_symmetrize_geom(true);
