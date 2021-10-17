@@ -132,6 +132,7 @@ void MOLEC::Molecule::print_info(const bool post_geom_opt)
 	{
 		std::cout << "  Population analysis        = true\n";
 		std::cout << "  Dipole moment              = true\n";
+		std::cout << "  Quadrupole moment          = true\n";
 
 		("RHF" == hf_settings::get_hf_type()) 
 		? std::cout << "  static polarizabilities    = true\n"

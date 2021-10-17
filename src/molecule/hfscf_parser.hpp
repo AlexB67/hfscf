@@ -173,7 +173,7 @@ int inline parse_element(const std::string& line)
 		if (ELEMENTDATA::name_to_Z.find(atom_name) == ELEMENTDATA::name_to_Z.end())
 		{
 			std::cout << "\n\n  Error: Unsupported element.\n";
-			std::cout << "   Line: Unsupoorted element.\n\n";
+			std::cout << "   Line: Unsupported element.\n\n";
 			exit(EXIT_FAILURE);
 		}
 
