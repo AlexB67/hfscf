@@ -6,11 +6,21 @@
 #include "../irc/cart_to_int.hpp"
 #include <iomanip>
 #include <iostream>
+#include <fstream>
 
 using HF_SETTINGS::hf_settings;
 
 void Mol::scf::geom_opt()
 {
+    const std::string& trajectory_file = hf_settings::get_geom_opt_trajectory_file();
+    std::ifstream file(trajectory_file);
+    // delete trajectory file if it exists
+    if(file.good())
+    {
+        file.close();
+        std::remove(trajectory_file.c_str());
+    }
+
     bool is_rhf = true;
     if("UHF" == hf_settings::get_hf_type()) is_rhf = false;
     std::unique_ptr<Mol::scf_gradient> grad_ptr = std::make_unique<Mol::scf_gradient>(molecule);

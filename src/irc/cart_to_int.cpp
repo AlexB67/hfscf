@@ -104,6 +104,8 @@ void CART_INT::Cart_int::get_guess_hessian(EigenMatrix<double>& hessian, const s
         constexpr double k_bond = 0.5;
         constexpr double k_angle = 0.2;
         constexpr double k_dihedral = 0.1;
+        constexpr double k_oop = 0.04;
+        
         std::size_t offset{0};
 
         for (std::size_t i{0}; i < m_bond.size(); ++i) hessian(i, i) = k_bond;
@@ -116,6 +118,9 @@ void CART_INT::Cart_int::get_guess_hessian(EigenMatrix<double>& hessian, const s
 
         offset = m_bond.size() + m_angle.size() + m_dihedral.size();
         for (std::size_t i{0}; i < m_linear_angle.size(); i++) hessian(i + offset, i + offset) = k_angle;
+
+        offset = m_bond.size() + m_angle.size() + m_dihedral.size() + m_linear_angle.size();
+        for (std::size_t i{0}; i < m_out_of_plane_bend.size(); i++) hessian(i + offset, i + offset) = k_oop;
 
         return;
     }
@@ -246,7 +251,7 @@ void CART_INT::Cart_int::get_guess_hessian(EigenMatrix<double>& hessian, const s
 
     for (size_t i = 0; i < m_out_of_plane_bend.size(); ++i)
     {
-        constexpr double oofp_angle = 0.12; //should be  0.045; behaves better with current
+        constexpr double oofp_angle = 0.045;
         Eigen::Index index = static_cast<Eigen::Index>(i + m_bond.size() + m_angle.size() 
                                                          + m_dihedral.size() + m_linear_angle.size());
         const auto idx_c =  m_out_of_plane_bend[i].c;
@@ -261,7 +266,7 @@ void CART_INT::Cart_int::get_guess_hessian(EigenMatrix<double>& hessian, const s
 
         vec3 r23 = linalg::cross(r2, r3);
         const double d = 1.0 - r1.dot(r23) / (r1.norm() * r2.norm() * r3.norm());
-        // for planar, d should always be 1, the above is as such redundant for this case
+
         hessian(index, index) = oofp_angle * d * d * d * d;
     } 
 
@@ -307,7 +312,7 @@ void CART_INT::Cart_int::rfo_step(const Eigen::Ref<const EigenMatrix<double> >& 
 
     irc_grad = get_irc_gradient(gradient_cart, false);
     
-    vec x_c{to_cartesian<vec3, vec>(molecule)};
+    const vec x_c{to_cartesian<vec3, vec>(molecule)};
     irc_coords = ircs->cartesian_to_irc(x_c);
 
     if(!irc_coords_old.size()) // compute new guess, first time visit in geom opt
@@ -334,7 +339,7 @@ void CART_INT::Cart_int::rfo_step(const Eigen::Ref<const EigenMatrix<double> >& 
     }
     else // update from previous
     {
-        EigenVector<double> del_irc_grad  = irc_grad - irc_grad_old;
+        const EigenVector<double> del_irc_grad  = irc_grad - irc_grad_old;
         EigenVector<double> del_irc_coord = irc_coords - irc_coords_old;
             
         std::cout << '\n'
@@ -346,8 +351,8 @@ void CART_INT::Cart_int::rfo_step(const Eigen::Ref<const EigenMatrix<double> >& 
         for(Index i = 0; i < del_irc_grad.size(); ++i)
         {
             Index offset = m_bond.size() + m_angle.size();
-            // work around dihedral flip (I suspect a bug in irc library but this works for now) 
-            // TODO need irc fix
+            // work around dihedral flip
+            // TODO need irc fix or something in my code
             if (i >= offset && i <  offset + (Index) m_dihedral.size())
             {
                 if (irc_coords_old(i) < 0 && irc_coords(i) > 0) irc_coords(i) = -irc_coords(i);
@@ -401,8 +406,8 @@ void CART_INT::Cart_int::rfo_step(const Eigen::Ref<const EigenMatrix<double> >& 
     }
 
     Eigen::SelfAdjointEigenSolver<EigenMatrix<double> > solver(rfo_mat);
-    EigenMatrix<double> rfo_evecs = solver.eigenvectors();
-    EigenVector<double> rfo_evals = solver.eigenvalues();
+    const EigenMatrix<double> rfo_evecs = solver.eigenvectors();
+    const EigenVector<double> rfo_evals = solver.eigenvalues();
 
     std::cout << "\n  *************************\n";
     std::cout << "  *    RFO Eigen values   *\n";
@@ -448,9 +453,10 @@ void CART_INT::Cart_int::rfo_step(const Eigen::Ref<const EigenMatrix<double> >& 
     // EigenMatrix<double> Ginv;
     // generalised_inverse(G, Ginv);
     // EigenMatrix<double> Binv = Ginv * B_mat.transpose();
-    EigenMatrix<double> P = ircs->get_P(); // = B_mat * Binv;
+    // P = B_mat * Binv;
+    EigenMatrix<double> P = ircs->get_P(); // not needed for now, but doesn't hurt.
 
-    vec istep = P * irc_step;
+    const vec istep = P * irc_step;
 
     std::cout << "\n  Projecting step redundancies:";
     std::cout << "\n**********************************************************\n";
@@ -472,10 +478,10 @@ CART_INT::Cart_int::get_irc_gradient(const Eigen::Ref<const EigenMatrix<double> 
                                      bool project) const
 {
     const int natoms = static_cast<int>(m_mol->get_atoms().size());
-    EigenMatrix<double> cart = m_mol->get_geom_copy();
+    const EigenMatrix<double> cart = m_mol->get_geom_copy();
 
     vec grad_xc = vec::Zero(3 * natoms);
-    for(int i = 0; i < natoms; ++i)
+    for(Index i = 0; i < natoms; ++i)
     {
         grad_xc[3 * i] = gradient_cart(i, 0);
         grad_xc[3 * i + 1] = gradient_cart(i, 1);
@@ -494,7 +500,7 @@ CART_INT::Cart_int::get_irc_gradient(const Eigen::Ref<const EigenMatrix<double> 
 
 EigenVector<double> CART_INT::Cart_int::get_cartesian_to_irc() const
 {
-    vec x_c{to_cartesian<vec3, vec>(molecule)};
+    const vec x_c{to_cartesian<vec3, vec>(molecule)};
     const vec irc = ircs->cartesian_to_irc(x_c);
     return irc;
 }
@@ -503,7 +509,7 @@ void CART_INT::Cart_int::irc_to_cartesian(const Eigen::Ref<const EigenVector<dou
                                           const Eigen::Ref<const EigenVector<double> >& del_irc,
                                           bool do_geometry_analysis) const
 {
-    vec x_c_previous{to_cartesian<vec3, vec>(molecule)};
+    const vec x_c_previous{to_cartesian<vec3, vec>(molecule)};
     const double tol = (hf_settings::get_geom_opt_algorithm() == "CGSD") ? 1E-10 : 1E-08;
     const size_t cycles = (hf_settings::get_geom_opt_algorithm() == "CGSD") ? 40U : 30U;
 
@@ -525,14 +531,14 @@ void CART_INT::Cart_int::irc_to_cartesian(const Eigen::Ref<const EigenVector<dou
     const int natoms = static_cast<int>(m_mol->get_atoms().size());
     EigenMatrix<double> new_geom = EigenMatrix<double>::Zero(natoms, 3);
 
-    for (int i = 0; i < natoms; ++i) 
+    for (Index i = 0; i < natoms; ++i) 
     {
         new_geom(i, 0) = result.x_c[3 * i];
         new_geom(i, 1) = result.x_c[3 * i + 1];
         new_geom(i, 2) = result.x_c[3 * i + 2];
     }
 
-    vec irc_back_transform = ircs->cartesian_to_irc(result.x_c);
+    const vec irc_back_transform = ircs->cartesian_to_irc(result.x_c);
     vec error = vec(irc.size());
     for (Index i = 0; i < irc.size(); ++i)
         error(i) = irc_back_transform(i) - irc(i) - del_irc(i);

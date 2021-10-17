@@ -1,15 +1,12 @@
 # methane RHF/cc-pVDZ
 scf_type = RHF
 initial_guess = CORE
-#basis_set = 6-31+G**
 basis_set = cc-pVDZ
 symmetrize_geom = true
 use_symmetry = true
-#align_geom = false
 geom_opt_algorithm = RFO
 geom_opt = MP2
 geom_opt_tol = HIGH
-#geom_opt_stepsize = 1.0
 diis_range = 5
 rms_tol = 1.0E-09
 energy_tol = 1.0E-09
@@ -31,3 +28,4 @@ units = bohr
   H  -0.000000000000     1.674105967293    -1.183771681898
   H  -0.000000000000    -1.674105967293    -1.183771681898
 }
+
