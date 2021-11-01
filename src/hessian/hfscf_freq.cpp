@@ -11,8 +11,9 @@
 
 using MOLEC::Molecule;
 using Eigen::Index;
+using HF_SETTINGS::hf_settings;
 
-int FREQ::hessian_projector(const std::shared_ptr<Molecule>& m_mol, EigenMatrix<double>& Projector)
+int FREQ::hessian_projector(const std::shared_ptr<Molecule>& m_mol, EigenMatrix<double>& Projector, bool project_rot)
 {
      // Build projection
     const int natoms = static_cast<int>(m_mol->get_atoms().size());
@@ -42,16 +43,30 @@ int FREQ::hessian_projector(const std::shared_ptr<Molecule>& m_mol, EigenMatrix<
     EigenVector<double> T1 = sqrtmasses.cwiseProduct(ux);
     EigenVector<double> T2 = sqrtmasses.cwiseProduct(uy);
     EigenVector<double> T3 = sqrtmasses.cwiseProduct(uz);
-    EigenVector<double> R4 = sqrtmasses.cwiseProduct(y3.cwiseProduct(uz) - z3.cwiseProduct(uy));
-    EigenVector<double> R5 = sqrtmasses.cwiseProduct(z3.cwiseProduct(ux) - x3.cwiseProduct(uz));
-    EigenVector<double> R6 = sqrtmasses.cwiseProduct(x3.cwiseProduct(uy) - y3.cwiseProduct(ux));
+    EigenVector<double> R4, R5, R6;
+    EigenMatrix<double> TR;
 
-    EigenMatrix<double> TR = EigenMatrix<double>(6, 3 * natoms);
-
-    for(Index i = 0; i < 3 * natoms; ++i)
+    if (project_rot)
     {
-        TR(0, i) = T1(i); TR(1, i) = T2(i); TR(2, i) = T3(i);
-        TR(3, i) = R4(i); TR(4, i) = R5(i); TR(5, i) = R6(i);
+        TR = EigenMatrix<double>(6, 3 * natoms);
+        R4 = sqrtmasses.cwiseProduct(y3.cwiseProduct(uz) - z3.cwiseProduct(uy));
+        R5 = sqrtmasses.cwiseProduct(z3.cwiseProduct(ux) - x3.cwiseProduct(uz));
+        R6 = sqrtmasses.cwiseProduct(x3.cwiseProduct(uy) - y3.cwiseProduct(ux));
+
+        for(Index i = 0; i < 3 * natoms; ++i)
+        {
+            TR(0, i) = T1(i); TR(1, i) = T2(i); TR(2, i) = T3(i);
+            TR(3, i) = R4(i); TR(4, i) = R5(i); TR(5, i) = R6(i);
+        }
+    }
+    else
+    {
+        TR = EigenMatrix<double>(3, 3 * natoms);
+
+        for(Index i = 0; i < 3 * natoms; ++i)
+        {
+            TR(0, i) = T1(i); TR(1, i) = T2(i); TR(2, i) = T3(i);
+        }
     }
 
     Eigen::JacobiSVD<EigenMatrix<double> > svd(TR.transpose(), Eigen::ComputeThinU);
@@ -113,13 +128,13 @@ void FREQ::calc_frequencies(const std::shared_ptr<Molecule>& m_mol,
         sqrtmassesinv(3 * i + 2) = 1.0 / std::sqrt(m_i);
   	}
 
-    //Eigen::SelfAdjointEigenSolver<EigenMatrix<double> > solver_unprojected(mwhessian, Eigen::EigenvaluesOnly);
     Eigen::SelfAdjointEigenSolver<EigenMatrix<double> > solver_unprojected(mwhessian);
     Eigen::VectorXcd evals = solver_unprojected.eigenvalues();
     EigenMatrix<double> evecs_unprojected = solver_unprojected.eigenvectors();
 
     EigenMatrix<double> Projector;
-    int dim = FREQ::hessian_projector(m_mol, Projector);
+    const bool project_rot = !hf_settings::get_project_hessian_translations_only();
+    int dim = FREQ::hessian_projector(m_mol, Projector, project_rot);
 
     const EigenMatrix<double>& mwhessian_projected = Projector.transpose() * mwhessian * Projector;
     Eigen::SelfAdjointEigenSolver<EigenMatrix<double> > solver_projected(mwhessian_projected);
@@ -265,7 +280,13 @@ void FREQ::print_harmonic_frequencies(const Eigen::Ref<const EigenMatrix<double>
     }
 
     std::cout << ")";
-    std::cout << "\n\n  Projecting Hessian: Removing translational and rotational modes:\n\n";
+    std::cout << "\n\n  Linear dependencies: " << linear_dep_dim <<  "\n";
+    
+    if (linear_dep_dim > 3)
+        std::cout << "  Projecting Hessian: Removing translational and rotational modes:\n\n";
+    else
+        std::cout << "  Projecting Hessian: Removing translational modes only:\n\n";
+
     std::cout << "  Projected frequencies / cm^-1\n";
     std::cout << "  (";
 
@@ -300,32 +321,36 @@ void FREQ::print_harmonic_frequencies(const Eigen::Ref<const EigenMatrix<double>
 	std::cout << "  * #    \u03C9 / cm^-1        \u03BC / amu    F/(mDyne/A)     TP(v=0)/a0    IR/(km/mol)      Char. T/K   *\n";
 	std::cout << "  ***********************************************************************************************\n";
 
-    Index F = 6;
-    if (molecule->molecule_is_linear()) F = 5;
-    // double ground_vib = 0;
-    // TODO dont project all modes when not at a minimum
-    int k = 1;
+    Index F = (linear_dep_dim > 3) ? linear_dep_dim : 0;
+  
 	for (Index i = evals.size() - 1; i >= F; --i)
 	{
-		std::cout << std::setw(5) << k;
 
         double freq_cm = 0;
+
 		if(fabs(sqrt(evals_projected(i)).imag()) < 1E-06)
         {
             freq_cm = hartree_to_wavenumber * std::sqrt(evals_projected(i)).real();
+            if (freq_cm < 10 && F == 0) continue; // skip if printing rotation type modes
+            std::cout << std::setw(5) << i + 1;
             std::cout << std::right << std::fixed << std::setprecision(4) << std::setw(13) << freq_cm;
         }
         else
         {
-            std::cout << std::right << std::fixed << std::setprecision(4) << std::setw(13) 
-            << hartree_to_wavenumber * std::sqrt(evals_projected(i)).imag();
+            std::cout << std::setw(5) << i + 1;
+            std::cout << std::right << std::fixed << std::setprecision(3) << std::setw(12) 
+            << hartree_to_wavenumber * std::sqrt(evals_projected(i)).imag() << "i";
         }
 
         std::cout << std::setw(15) << std::right << std::fixed << std::setprecision(6) << reduced_mass(i);
         std::cout << std::setw(15) << std::right << std::fixed << std::setprecision(6) 
                   <<  freq_cm * freq_cm * reduced_mass(i) * force_constant_mdyne;
-        std::cout << std::setw(15) << std::right << std::fixed << std::setprecision(6) 
-                  << 1.0 / (sqrt(freq_cm * reduced_mass(i)) * convs);
+
+        if(fabs(sqrt(evals_projected(i)).imag()) < 1E-06)
+            std::cout << std::setw(15) << std::right << std::fixed << std::setprecision(6) 
+                    << 1.0 / (sqrt(freq_cm * reduced_mass(i)) * convs);
+        else
+            std::cout << std::setw(15) << std::right << std::fixed << std::setprecision(6) << 0.0;
         
         if (ir_intensity.size())
             std::cout << std::setw(15) << std::right << std::fixed << std::setprecision(4) 
@@ -335,7 +360,6 @@ void FREQ::print_harmonic_frequencies(const Eigen::Ref<const EigenMatrix<double>
 
         std::cout << std::setw(15) << std::right << std::fixed << std::setprecision(4) 
                   << freq_cm * convk << '\n';
-        ++k;
 	}
 
     if (molecule->get_atoms().size() > 2)
@@ -356,18 +380,30 @@ void FREQ::print_harmonic_frequencies(const Eigen::Ref<const EigenMatrix<double>
         std::cout << "\n  ************************************\n";
     }
 
+    const auto skip = [&](int i) -> bool
+    {
+        if (F != 0 || i < 0) return false;
+
+        else if(fabs(sqrt(evals_projected(i)).imag()) < 1E-06
+                && hartree_to_wavenumber * std::sqrt(evals_projected(i)).real() < 10)
+                    return true;
+
+        return false;
+    };
+
     const auto& zval = molecule->get_z_values();
-    int mode = 1;
-    for (int i = 3 * static_cast<int>(zval.size()) - linear_dep_dim - 1; i >= 0; i -= 3)
+    int mode = evals_projected.size();
+    for (int i = 3 * static_cast<int>(zval.size()) - F - 1; i >= 0; i -= 3)
     {
         std::cout << "           Mode:" << std::setw(3) << mode;
 
-        if (molecule->get_atoms().size() > 2)
+        if (molecule->get_atoms().size() > 2 || F == 0)
         {
             if (i > 1)
-                std::cout << "                     Mode:" << std::setw(3) << mode + 1;
+                std::cout << "                     Mode:" << std::setw(3) << mode - 1;
+            
             if (i > 0)
-                std::cout << "                     Mode:" << std::setw(3) << mode + 2;
+                std::cout << "                     Mode:" << std::setw(3) << mode - 2;
         }
 
         std::cout << "\n";
@@ -379,41 +415,52 @@ void FREQ::print_harmonic_frequencies(const Eigen::Ref<const EigenMatrix<double>
             
             for (int xyz = 0; xyz < 3; ++xyz)
             {
-                std::cout <<  std::right << std::setw(9) << std::setprecision(4) << norm_vectors(3 * j + xyz, i);
+                if (skip(i) == false)
+                    std::cout <<  std::right << std::setw(9) << std::setprecision(4) << norm_vectors(3 * j + xyz, i);
+                else
+                    std::cout <<  std::right << std::setw(9) << std::setprecision(4) << 0.;
             }
 
             if (i - 1 >= 0)
                 for (int xyz = 0; xyz < 3; ++xyz)
                 {
                     int w = (xyz == 0) ? 11 : 9;
-                    std::cout <<  std::right << std::setw(w) << std::setprecision(4) << norm_vectors(3 * j + xyz, i - 1);
+                    if (skip(i - 1) == false)
+                        std::cout <<  std::right << std::setw(w) << std::setprecision(4) << norm_vectors(3 * j + xyz, i - 1);
+                    else
+                        std::cout <<  std::right << std::setw(w) << std::setprecision(4) << 0.;
                 }
 
             if (i - 2 >= 0)
                 for (int xyz = 0; xyz < 3; ++xyz)
                 {   int w = (xyz == 0) ? 11 : 9;
-                    std::cout <<  std::right << std::setw(w) << std::setprecision(4) << norm_vectors(3 * j + xyz, i - 2);
+                    if (skip(i - 2) == false)
+                        std::cout <<  std::right << std::setw(w) << std::setprecision(4) << norm_vectors(3 * j + xyz, i - 2);
+                    else
+                        std::cout <<  std::right << std::setw(w) << std::setprecision(4) << 0.;
                 }
 
             std::cout << "\n";
         }
 
         std::cout << "\n\n";
-        mode += 3;
+        mode -= 3;
     }
 
-    print_thermo_chemistry(molecule, evals, E_electronic);
+    print_thermo_chemistry(molecule, evals_projected, E_electronic, linear_dep_dim);
 }
 
 using hfscfmath::pi;
 
 void FREQ::print_thermo_chemistry(const std::shared_ptr<MOLEC::Molecule>& molecule, 
                                   const Eigen::Ref<const Eigen::VectorXcd>& evals,
-                                  const double E_electronic)
+                                  const double E_electronic, int linear_dep_dim)
 {
     if(!molecule->get_atoms().size()) return;
 
     std::cout << "  ___Thermochem___\n\n";
+
+    Index F = (linear_dep_dim > 3) ? linear_dep_dim : 0;
 
     double T_ = hf_settings::get_thermo_chem_temperature();
     double P_ = hf_settings::get_thermo_chem_pressure();
@@ -454,26 +501,31 @@ void FREQ::print_thermo_chemistry(const std::shared_ptr<MOLEC::Molecule>& molecu
 
     double Svib = 0; double Cpvib = 0; double Cvvib = 0; double Uvib = 0; double Hvib = 0;
     double zpe = 0;
-    
-    int F = 6;
-    if (molecule->molecule_is_linear()) F = 5;
 
     for (int  i = 0; i < evals.size(); ++i)
+    {
+        if(fabs(sqrt(evals(i)).imag()) < 1E-06)
+        {
+            const double freq_cm = hartree_to_wavenumber * std::sqrt(evals(i)).real();
+            if (freq_cm < 10 && F == 0) continue; // skip if printing rotation type modes
+        }
+        
         if (evals(i).real() > evals(i).imag())
         {
             if (i >= F)
             {
-            const double theta = convk * hartree_to_wavenumber * std::sqrt(evals(i)).real() / T_;
-            Svib  += theta / (std::exp(theta) - 1.0) - log(1.0 - std::exp(-theta));
-            Cvvib += std::exp(theta) * std::pow((theta / (std::exp(theta) - 1.0)), 2);
-            zpe += theta * T_ / 2;
-            Uvib += T_ * theta * (1.0 / 2.0 + 1.0 / (std::exp(theta) - 1.0));
+                const double theta = convk * hartree_to_wavenumber * std::sqrt(evals(i)).real() / T_;
+                Svib  += theta / (std::exp(theta) - 1.0) - log(1.0 - std::exp(-theta));
+                Cvvib += std::exp(theta) * std::pow((theta / (std::exp(theta) - 1.0)), 2);
+                zpe += theta * T_ / 2;
+                Uvib += T_ * theta * (1.0 / 2.0 + 1.0 / (std::exp(theta) - 1.0));
             }
 
-            if(hartree_to_wavenumber * std::sqrt(evals(i)).real() < low_mode && i >= F)
+            if(hartree_to_wavenumber * std::sqrt(evals(i)).real() < low_mode && i >= linear_dep_dim)
                 std::cout << "  Note: Low mode in thermochemistry: " 
                 << hartree_to_wavenumber * std::sqrt(evals(i)).real() << "\n";
         }
+    }
 
     Svib  *= convert;
     Cvvib *= convert;

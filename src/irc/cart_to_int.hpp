@@ -57,6 +57,9 @@ namespace CART_INT
             void rfo_step(const Eigen::Ref<const EigenMatrix<double> >& gradient_cart,
                           EigenVector<double>& irc_coords, EigenVector<double>& irc_grad,
                           EigenMatrix<double>& hessian) const;
+            
+            void fix_dihedral_irc_step_near_2pi(EigenVector<double>& irc_new, 
+                                                const Eigen::Ref<const EigenVector<double> >& irc_old) const;
 
             void print_bonding_info(bool print_projector = false, bool print_wilson = false, std::string new_title = {}) const;
         

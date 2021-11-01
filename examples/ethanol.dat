@@ -13,8 +13,8 @@ rms_tol = 0.5E-07
 electronic_properties = true
 gradient_type = SCF
 geom_opt = SCF
-geom_opt_tol = MEDIUM
-geom_opt_write_xyz = true
+geom_opt_tol = HIGH
+# geom_opt_write_xyz = true
 frequencies = SCF
 units = angstrom
 {

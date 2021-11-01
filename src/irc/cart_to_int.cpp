@@ -340,6 +340,7 @@ void CART_INT::Cart_int::rfo_step(const Eigen::Ref<const EigenMatrix<double> >& 
     else // update from previous
     {
         const EigenVector<double> del_irc_grad  = irc_grad - irc_grad_old;
+        fix_dihedral_irc_step_near_2pi(irc_coords, irc_coords_old);
         EigenVector<double> del_irc_coord = irc_coords - irc_coords_old;
             
         std::cout << '\n'
@@ -350,17 +351,6 @@ void CART_INT::Cart_int::rfo_step(const Eigen::Ref<const EigenMatrix<double> >& 
 
         for(Index i = 0; i < del_irc_grad.size(); ++i)
         {
-            Index offset = m_bond.size() + m_angle.size();
-            // work around dihedral flip
-            // TODO need irc fix or something in my code
-            if (i >= offset && i <  offset + (Index) m_dihedral.size())
-            {
-                if (irc_coords_old(i) < 0 && irc_coords(i) > 0) irc_coords(i) = -irc_coords(i);
-                else if (irc_coords_old(i) > 0 && irc_coords(i) < 0) irc_coords(i) = -irc_coords(i);
-                
-                del_irc_coord(i) = irc_coords(i) - irc_coords_old(i);
-            }
-
             std::cout << std::setw(4) << std::right  << i + 1
             << std::setw(15) << std::right << std::setprecision(9) << irc_coords_old(i)
             << std::setw(15) << std::right << std::setprecision(9) << irc_coords(i)
@@ -538,7 +528,9 @@ void CART_INT::Cart_int::irc_to_cartesian(const Eigen::Ref<const EigenVector<dou
         new_geom(i, 2) = result.x_c[3 * i + 2];
     }
 
-    const vec irc_back_transform = ircs->cartesian_to_irc(result.x_c);
+    vec irc_back_transform = ircs->cartesian_to_irc(result.x_c);
+    fix_dihedral_irc_step_near_2pi(irc_back_transform, irc + del_irc);
+    
     vec error = vec(irc.size());
     for (Index i = 0; i < irc.size(); ++i)
         error(i) = irc_back_transform(i) - irc(i) - del_irc(i);
@@ -602,6 +594,23 @@ void CART_INT::Cart_int::irc_to_cartesian(const Eigen::Ref<const EigenVector<dou
 
 
     outfile.close();
+}
+
+void  CART_INT::Cart_int::fix_dihedral_irc_step_near_2pi(EigenVector<double>& irc_new, 
+                                                         const Eigen::Ref<const EigenVector<double> >& irc_old) const
+{
+     const Index offset = ircs->get_bonds().size() + ircs->get_angles().size();
+    // Did the step change by 2 pi or -2 pi  ? then it changed by 0; 
+    // work around dihedral flip 
+    // we don't need to check if we are  near 2 pi or -2 pi, since the folowing conditions only happen near 2 pi
+    // or - 2 pi
+     for (Index i = offset; i < offset + (Index)m_dihedral.size(); ++i) 
+     {
+         if (irc_old(i) < 0 && irc_new(i) > 0)
+             irc_new(i) = -irc_new(i);
+         else if (irc_old(i) > 0 && irc_new(i) < 0)
+             irc_new(i) = -irc_new(i);
+     }
 }
 
 // void CART_INT::Cart_int::generalised_inverse(const Eigen::Ref<const EigenMatrix<double> >& in_mat, 

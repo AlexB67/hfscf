@@ -325,6 +325,11 @@ void hf_settings::set_soscf(const bool soscf)
     m_use_soscf = soscf;
 }
 
+void hf_settings::set_project_hessian_translations_only(const bool project_trans_only)
+{
+    m_project_hessian_trans_only = project_trans_only;
+}
+
 void hf_settings::set_scf_direct(const bool scf_direct) 
 { 
     m_scf_direct = scf_direct; 
@@ -585,6 +590,11 @@ bool hf_settings::get_use_symmetry()
 bool hf_settings::get_soscf()
 { 
     return m_use_soscf;
+}
+
+bool hf_settings::get_project_hessian_translations_only()
+{ 
+    return m_project_hessian_trans_only;
 }
 
 bool hf_settings::get_freeze_core()

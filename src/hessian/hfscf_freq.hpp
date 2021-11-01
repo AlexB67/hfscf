@@ -9,7 +9,7 @@ using MOLEC::Molecule;
 
 namespace FREQ
 {
-    int hessian_projector(const std::shared_ptr<MOLEC::Molecule>& m_mol, EigenMatrix<double>& Projector);
+    int hessian_projector(const std::shared_ptr<MOLEC::Molecule>& m_mol, EigenMatrix<double>& Projector, bool project_rot = true);
 
     void calc_frequencies(const std::shared_ptr<MOLEC::Molecule>& m_mol, 
                           const Eigen::Ref<const EigenMatrix<double> >& hes,
@@ -29,7 +29,7 @@ namespace FREQ
     
     void print_thermo_chemistry(const std::shared_ptr<MOLEC::Molecule>& molecule, 
                                 const Eigen::Ref<const Eigen::VectorXcd>& evals,
-                                const double E_electronic);
+                                const double E_electronic, int linear_dep_dim);
 }
 
 #endif

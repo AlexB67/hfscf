@@ -34,6 +34,7 @@ namespace Keywords
         {"geom_opt_constrain_oop", "true"},  {"geom_opt_constrain_oop", "false"},
         {"geom_opt_guess_hessian", "SCHLEGEL"},  {"geom_opt_guess_hessian", "SIMPLE"},
         {"soscf", "true"},  {"soscf", "false"},
+        {"hess_project_translations_only", "true"}, {"hess_project_translations_only", "false"},
         {"geom_opt_write_xyz", "true"}, {"geom_opt_write_xyz", "false"},
         {"eri_screen", "true"}, {"eri_screen", "false"},
         {"freeze_core", "true"}, {"freeze_core", "false"},
@@ -90,6 +91,7 @@ namespace Keywords
         {"geom_opt_constrain_oop", " expecting \"geom_opt_constrain_oop = true|false\""},
         {"geom_opt_guess_hessian", " expecting \"geom_opt_guess_hessian = SCHLEGEL|SIMPLE\""},
         {"soscf", " expecting \"soscf = true|false\""},
+        {"hess_project_translations_only", " expecting \"hess_project_translations_only = true|false\""},
         {"freeze_core", " expecting \"freeze_core = true|false\""},
         {"uhf_guess_mix", " expecting \"uhf_guess_mix = true|false\""},
         {"eri_screen", " expecting \"eri_screen = true|false\""},
@@ -178,6 +180,7 @@ namespace Keywords
         {"grad_step_from_energy", &hf_settings::set_grad_step_from_energy},
         {"hessian_step_from_grad", &hf_settings::set_hessian_step_from_grad},
         {"hessian_step_from_energy", &hf_settings::set_hessian_step_from_energy},
+        {"hess_project_translations_only", &hf_settings::set_project_hessian_translations_only},
         {"thermo_chem_pressure", &hf_settings::set_thermo_chem_pressure},
         {"thermo_chem_temperature", &hf_settings::set_thermo_chem_temperature}
         // multiplicity:   Not a setting, but is a keyword molecule member, no function needed 

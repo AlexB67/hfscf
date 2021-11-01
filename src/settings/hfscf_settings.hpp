@@ -65,6 +65,7 @@ namespace HF_SETTINGS
             inline static std::optional<bool>  m_use_pure_am;
             inline static bool          m_use_symmetry{false};
             inline static bool          m_use_soscf{false};
+            inline static bool          m_project_hessian_trans_only{false};
         
         public:
             hf_settings() = delete;
@@ -126,7 +127,8 @@ namespace HF_SETTINGS
             static void set_geom_opt_algorithm(const std::string& geom_opt_algorithm);
             static void set_align_geom(const bool align_geom);
             static void set_use_symmetry(const bool use_symmetry);
-            static void set_soscf(const bool enabe_soscf);
+            static void set_soscf(const bool enable_soscf);
+            static void set_project_hessian_translations_only(const bool project_trans_only);
             static void set_geom_opt_guess_hessian(const std::string& guess_hessian);
 
             static std::string& get_basis_set_name();
@@ -184,6 +186,7 @@ namespace HF_SETTINGS
             static bool get_align_geom();
             static bool get_use_symmetry();
             static bool get_soscf();
+            static bool get_project_hessian_translations_only();
     };
 }
 
