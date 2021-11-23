@@ -30,6 +30,12 @@ namespace FREQ
     void print_thermo_chemistry(const std::shared_ptr<MOLEC::Molecule>& molecule, 
                                 const Eigen::Ref<const Eigen::VectorXcd>& evals,
                                 const double E_electronic, int linear_dep_dim);
+    
+    void molden_write(const Eigen::Ref<const Eigen::VectorXcd>& evals,
+                      const Eigen::Ref<const EigenMatrix<double> >& norm_vectors,
+                      const Eigen::Ref<const EigenVector<double> >& ir_intensity,
+                      const std::shared_ptr<MOLEC::Molecule>& molecule, 
+                      int linear_dep_dim);
 }
 
 #endif

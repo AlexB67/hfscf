@@ -8,6 +8,7 @@
 #include <iostream>
 #include <string>
 #include <optional>
+#include <filesystem>
 
 namespace MOLPARSE
 {
@@ -231,6 +232,38 @@ void inline check_coord_is_double(const std::string& val, const std::string& lin
 		exit(EXIT_FAILURE);
 	}
 }
+
+std::string set_output_path(const std::string& filename, const std::string& suffix)
+{
+    std::string path = filename;
+    std::string file;
+    char sep = '/';
+
+#ifdef _WIN32
+    sep = '\\';
+#endif
+    size_t pos = path.rfind(sep, path.length());
+
+    if (pos != std::string::npos) 
+	{
+        file = path.substr(pos + 1, path.length() - pos);
+        path = path.substr(0, pos);
+    }
+
+    pos = file.rfind('.', file.length());
+
+    if (pos != std::string::npos) file = file.substr(0, pos);
+
+    file += suffix;
+    std::string filepath = path + "/" + file;
+
+    if (std::filesystem::exists(filepath) &&
+        !std::filesystem::is_directory(filepath))  // lets not ruin the filesytem just in case
+        std::filesystem::remove(filepath);         // a directory by that name exists
+
+    return filepath;
+}
+
 }
 
 #endif

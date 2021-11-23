@@ -7,6 +7,8 @@
 #include <Eigen/Eigenvalues>
 #include <iomanip>
 #include <iostream>
+#include <fstream>
+#include <filesystem>
 
 
 using MOLEC::Molecule;
@@ -383,7 +385,6 @@ void FREQ::print_harmonic_frequencies(const Eigen::Ref<const EigenMatrix<double>
     const auto skip = [&](int i) -> bool
     {
         if (F != 0 || i < 0) return false;
-
         else if(fabs(sqrt(evals_projected(i)).imag()) < 1E-06
                 && hartree_to_wavenumber * std::sqrt(evals_projected(i)).real() < 10)
                     return true;
@@ -448,10 +449,98 @@ void FREQ::print_harmonic_frequencies(const Eigen::Ref<const EigenMatrix<double>
     }
 
     print_thermo_chemistry(molecule, evals_projected, E_electronic, linear_dep_dim);
+
+    if (hf_settings::get_freq_write_molden())
+        molden_write(evals_projected, norm_vectors, ir_intensity, molecule, linear_dep_dim);
+}
+
+void FREQ::molden_write(const Eigen::Ref<const Eigen::VectorXcd>& evals,
+                        const Eigen::Ref<const EigenMatrix<double> >& norm_vectors,
+                        const Eigen::Ref<const EigenVector<double> >& ir_intensity,
+                        const std::shared_ptr<MOLEC::Molecule>& molecule,
+                        int linear_dep_dim)
+{
+    std::ofstream outfile;
+    const std::string& molden_file = hf_settings::get_freq_molden_file();
+    outfile.open(molden_file, std::ios_base::app);
+
+    outfile << "[Molden Format]\n\n";
+    outfile << "[FREQ]\n";
+
+    Index F = (linear_dep_dim > 3) ? linear_dep_dim : 0;
+
+    for (Index i = F; i < evals.size(); ++i)
+    {
+        if(fabs(sqrt(evals(i)).imag()) < 1E-06)
+        {
+            const double freq_cm = hartree_to_wavenumber * std::sqrt(evals(i)).real();
+            if (freq_cm < 10 && F == 0) continue; // skip if printing rotation type modes
+
+            outfile << std::right << std::setprecision(10) << std::fixed 
+                    << std::setw(20) << freq_cm << "\n";
+        }
+    }
+
+    outfile << "\n\n[FR-COORD]\n";
+
+    Index natoms = static_cast<Index>(molecule->get_atoms().size());
+    const auto& zval = molecule->get_z_values();
+
+    for(Index i = 0; i < natoms; ++i)
+    {
+        outfile   << ELEMENTDATA::atom_names[zval[i] - 1]
+                  << std::right << std::fixed << std::setprecision(10)
+                  << std::setw(18) << molecule->get_geom()(i, 0)
+                  << std::right << std::fixed << std::setw(18) 
+                  << molecule->get_geom()(i, 1)
+                  << std::right << std::fixed << std::setw(18) 
+                  << molecule->get_geom()(i, 2) << "\n";
+    }
+
+    outfile << "\n\n[FR-NORM-COORD]";
+
+    int mode = 1;
+    for (Index i = 0; i < 3 * static_cast<int>(zval.size()) - F; ++i)
+    {
+        const double freq_cm = hartree_to_wavenumber * std::sqrt(evals(i)).real();
+        if (freq_cm < 10 && F == 0) continue; // skip if printing rotation type modes
+        
+        outfile << "\nVibration " + std::to_string(mode);
+
+        for (Index j = 0; j < natoms; ++j) 
+        {
+            outfile << "\n";
+            for (Index xyz = 0; xyz < 3; ++xyz) 
+            {
+                outfile << std::right << std::fixed << std::setprecision(10) 
+                        << std::setw(18) << norm_vectors(3 * j + xyz, i);
+            }
+        }
+
+        ++mode;
+    }
+
+    if (ir_intensity.size())
+    {
+        outfile << "\n\n[INT]";
+
+        for (Index i = F; i < evals.size(); ++i)
+        {
+            if(fabs(sqrt(evals(i)).imag()) < 1E-06)
+            {
+                const double freq_cm = hartree_to_wavenumber * std::sqrt(evals(i)).real();
+                if (freq_cm < 10 && F == 0) continue; // skip if printing rotation type modes
+
+                outfile << "\n" << std::right << std::fixed << std::setprecision(10)
+                        << std::setw(20) <<  ir_intensity[i] * 974.8801263471677; // TODO add to constants;
+            }
+        }
+    }
+
+    outfile.close();
 }
 
 using hfscfmath::pi;
-
 void FREQ::print_thermo_chemistry(const std::shared_ptr<MOLEC::Molecule>& molecule, 
                                   const Eigen::Ref<const Eigen::VectorXcd>& evals,
                                   const double E_electronic, int linear_dep_dim)

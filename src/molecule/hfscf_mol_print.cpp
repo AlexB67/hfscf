@@ -72,6 +72,9 @@ void MOLEC::Molecule::print_info(const bool post_geom_opt)
 		std::cout << "  Geomopt method             = " << hf_settings::get_geom_opt_algorithm() << "\n";
 		std::cout << "  Geomopt tolerance          = " << hf_settings::get_geom_opt_tol() << '\n';
 
+		if (hf_settings::get_geom_opt_write_trajectory())
+			std::cout << "  Geomopt write xyz file     = true\n";
+
 		if(hf_settings::get_geom_opt_algorithm() == "RFO")
 		{
 			std::cout << "  Geomopt RFO stepsize       = automatic\n";
@@ -163,6 +166,9 @@ void MOLEC::Molecule::print_info(const bool post_geom_opt)
 				          << "  Hessian gradient stepsize  = " << std::scientific << std::setprecision(2) <<
 				hf_settings::get_hessian_step_from_grad() << "\n";
 		}
+
+		if (hf_settings::get_freq_write_molden())
+			std::cout << "  Write Molden file          = true\n";
 	}
 	
 	std::cout << "  Print level verbosity      = " << hf_settings::get_verbosity() << '\n';

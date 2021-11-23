@@ -199,7 +199,6 @@ namespace MOLEC
             void do_geometry_analysis();
             void do_salc_analysis();
             void calc_nuclear_repulsion_energy();
-            void set_geom_opt_trajectory_params(const std::string& filename) const;
             void write_basis_set_info() const;
             void create_shell_pairs();
             Eigen::Index get_num_gtos() const;

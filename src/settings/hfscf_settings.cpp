@@ -310,6 +310,11 @@ void hf_settings::set_geom_opt_write_trajectory(const bool geom_opt_write_trajec
     m_geom_opt_write_trajectory = geom_opt_write_trajectory;
 }
 
+void hf_settings::set_freq_write_molden(const bool freq_write_molden)
+{
+    m_freq_write_molden = freq_write_molden;
+}
+
 void hf_settings::set_align_geom(const bool align_geom)
 {
     m_align_geom = align_geom;
@@ -343,6 +348,11 @@ void hf_settings::set_uhf_guess_mix(const bool uhf_guess_mix)
 void hf_settings::set_geom_opt(const std::string& geom_opt) 
 { 
     m_geom_opt = geom_opt;
+}
+
+void hf_settings::set_freq_molden_file(const std::string& molden_file)
+{
+    m_frequencies_molden_file = molden_file;
 }
 
 void hf_settings::set_geom_opt_trajectory_file(const std::string& geom_opt_trajectory_file) 
@@ -625,6 +635,11 @@ bool hf_settings::get_geom_opt_write_trajectory()
     return m_geom_opt_write_trajectory;
 }
 
+bool hf_settings::get_freq_write_molden()
+{
+    return m_freq_write_molden;
+}
+
 bool hf_settings::get_uhf_guess_mix()
 { 
     return m_uhf_guess_mix;
@@ -633,6 +648,11 @@ bool hf_settings::get_uhf_guess_mix()
 std::string& hf_settings::get_geom_opt_trajectory_file()
 {
     return m_geom_opt_trajectory_file;
+}
+
+std::string& hf_settings::get_freq_molden_file()
+{
+    return m_frequencies_molden_file;
 }
 
 std::string& hf_settings::get_geom_opt()

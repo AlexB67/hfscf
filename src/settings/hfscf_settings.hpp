@@ -14,6 +14,7 @@ namespace HF_SETTINGS
             inline static std::string   m_basis_set_name{"STO-3G"};
             inline static std::string   m_basis_set_path{""};
             inline static std::string   m_geom_opt_trajectory_file{""};
+            inline static std::string   m_frequencies_molden_file{""};
             inline static std::string   m_basis_coord_type{"cartesian"};
             inline static std::string   m_post_scf_type{""};
             inline static std::string   m_unit_type{"bohr"};
@@ -62,6 +63,7 @@ namespace HF_SETTINGS
             inline static bool          m_molprops{false};
             inline static bool          m_molprops_cphf_iterative{false};
             inline static bool          m_geom_opt_write_trajectory{false};
+            inline static bool          m_freq_write_molden{false};
             inline static std::optional<bool>  m_use_pure_am;
             inline static bool          m_use_symmetry{false};
             inline static bool          m_use_soscf{false};
@@ -122,7 +124,9 @@ namespace HF_SETTINGS
             static void set_molprops_cphf_iter(const bool cphf_iter);
             static void set_use_pure_angular_momentum(const bool pure_am);
             static void set_geom_opt_write_trajectory(const bool geom_opt_write_trajectory);
+            static void set_freq_write_molden(const bool freq_molden);
             static void set_geom_opt_trajectory_file(const std::string& trajectory_file);
+            static void set_freq_molden_file(const std::string& molden_file);
             static void set_geom_opt(const std::string& geom_opt);
             static void set_geom_opt_algorithm(const std::string& geom_opt_algorithm);
             static void set_align_geom(const bool align_geom);
@@ -147,6 +151,7 @@ namespace HF_SETTINGS
             static std::string& get_point_group_equivalence_threshold();
             static std::string& get_point_group();
             static std::string& get_geom_opt_trajectory_file();
+            static std::string& get_freq_molden_file();
             static std::string& get_geom_opt_guess_hessian();
             static double get_ccsd_rms_tol();
             static double get_rms_tol();
@@ -183,6 +188,7 @@ namespace HF_SETTINGS
             static bool get_uhf_guess_mix();
             static bool get_screen_eri();
             static bool get_geom_opt_write_trajectory();
+            static bool get_freq_write_molden();
             static bool get_align_geom();
             static bool get_use_symmetry();
             static bool get_soscf();

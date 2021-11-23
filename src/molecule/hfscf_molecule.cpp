@@ -289,7 +289,16 @@ void MOLEC::Molecule::init_molecule(const std::string& filename)
     calc_nuclear_repulsion_energy();
 
 	if(hf_settings::get_geom_opt_write_trajectory() && hf_settings::get_geom_opt().length())
-		set_geom_opt_trajectory_params(filename);
+	{
+		const auto file = MOLPARSE::set_output_path(filename, ".xyz");
+		hf_settings::set_geom_opt_trajectory_file(file);
+	}
+
+	if(hf_settings::get_freq_write_molden() && hf_settings::get_frequencies_type().length())
+	{
+		const auto file = MOLPARSE::set_output_path(filename, ".molden_normal_modes");
+		hf_settings::set_freq_molden_file(file);
+	}
 
 	// overrides use_symmetry, may remove this flag once symmetry code is solid
 	if (is_pure && hf_settings::get_point_group().length()) hf_settings::set_use_symmetry(true);
@@ -324,37 +333,6 @@ void MOLEC::Molecule::init_molecule(const std::string& filename)
 
 	if (is_pure && hf_settings::get_use_symmetry())
 		do_salc_analysis();
-}
-
-void MOLEC::Molecule::set_geom_opt_trajectory_params(const std::string& filename) const
-{
-    std::string trajectorypath = filename;
-    std::string trajectoryfile;
-    char sep = '/';
-
-#ifdef _WIN32
-    sep = '\\';
-#endif
-    size_t pos = trajectorypath.rfind(sep, trajectorypath.length());
-
-    if (pos != std::string::npos) 
-	{
-        trajectoryfile = trajectorypath.substr(pos + 1, trajectorypath.length() - pos);
-        trajectorypath = trajectorypath.substr(0, pos);
-    }
-
-    pos = trajectoryfile.rfind('.', trajectoryfile.length());
-
-    if (pos != std::string::npos) trajectoryfile = trajectoryfile.substr(0, pos);
-
-    trajectoryfile += ".xyz";
-    std::string trajectoryfilepath = trajectorypath + "/" + trajectoryfile;
-
-    if (std::filesystem::exists(trajectoryfilepath) &&
-        !std::filesystem::is_directory(trajectoryfilepath))  // lets not ruin the filesytem just in case
-        std::filesystem::remove(trajectoryfilepath);         // a directory by that name exists
-
-    hf_settings::set_geom_opt_trajectory_file(trajectoryfilepath);
 }
 
 void MOLEC::Molecule::calc_nuclear_repulsion_energy()

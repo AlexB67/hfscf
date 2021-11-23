@@ -14,7 +14,8 @@ electronic_properties = true
 gradient_type = SCF
 geom_opt = SCF
 geom_opt_tol = HIGH
-# geom_opt_write_xyz = true
+geom_opt_write_xyz = true
+freq_write_molden = true
 frequencies = SCF
 units = angstrom
 {
