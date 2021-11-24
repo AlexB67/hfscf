@@ -26,7 +26,7 @@ endif()
 #include_directories(irc ${Boost_INCLUDE_DIRS})
 
 include_directories(irc ${Boost_INCLUDE_DIRS} ${CMAKE_BINARY_DIR}/subprojects/libmsym 
-                   ${CMAKE_SOURC_DIR}/subprojects/libmsym/src) # MKL add /usr/local/intel/mkl/include
+                   ${CMAKE_SOURCE_DIR}/subprojects/libmsym/src) # MKL add /usr/local/intel/mkl/include
 
 # -Wconversion during dev work if you want, note that it generates loads of (harmless) warnings
 if(MSVC) # windows not supported anymore
