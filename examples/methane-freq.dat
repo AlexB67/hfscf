@@ -1,7 +1,6 @@
 # methane RHF/cc-pVDZ
 scf_type = RHF
 initial_guess = SAD
-#basis_set = 6-31+G**
 basis_set = cc-pVDZ
 symmetrize_geom = true
 use_symmetry = true

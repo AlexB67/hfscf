@@ -27,6 +27,7 @@ McMurchie-Davidson, and a 30 year hiatus from physical chemistry and spectroscop
 * Normal modes.
 * Thermochemistry analysis.
 * Lowdin and Mulliken population analysis.
+* Mayer indices (bond orders)
 * Dipole moments, Quadrupole moments and static dipole polarizabilities (using direct or iterative CPHF).
 
 ### Building the software

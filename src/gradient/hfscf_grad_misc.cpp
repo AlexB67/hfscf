@@ -67,6 +67,9 @@ void Mol::scf_gradient::print_gradient_info(const Eigen::Ref<EigenMatrix<double>
     std::cout << "  #  atom      dE/dX / (Eh a0^-1)    dE/dY / (Eh a0^-1)    dE/dZ / (Eh a0^-1)\n";
     std::cout << "*****************************************************************************\n";
     print_grad(gradtotal);
+
+    std::cout  << "\n  Total Gradients RMS = " << std::setprecision(12)
+               << std::sqrt(gradtotal.cwiseProduct(gradtotal).sum()) << "\n";
 }
 
 void Mol::scf_gradient::print_gradient_info_mp2(const Eigen::Ref<EigenMatrix<double> >& gradNuc, 
@@ -123,6 +126,9 @@ void Mol::scf_gradient::print_gradient_info_mp2(const Eigen::Ref<EigenMatrix<dou
     std::cout << "  #  atom      dE/dX / (Eh a0^-1)    dE/dY / (Eh a0^-1)    dE/dZ / (Eh a0^-1)\n";
     std::cout << "*****************************************************************************\n";
     print_grad(gradtotal);
+
+    std::cout  << "\n  Total Gradients RMS = " << std::setprecision(12)
+               << std::sqrt(gradtotal.cwiseProduct(gradtotal).sum()) << "\n";
 }
 
 bool Mol::scf_gradient::check_geom_opt(const std::vector<int>& zval, int natoms)

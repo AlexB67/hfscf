@@ -81,6 +81,12 @@ namespace MolProps
             //! d_mat: A const reference to the density matrix.
             void population_analysis_rhf(const Eigen::Ref<const EigenMatrix<double> >& s_mat,
                                          const Eigen::Ref<const EigenMatrix<double> >& d_mat);
+            
+             //!Bond orders - RHF only
+            //! s_mat: A const reference to the overlap matrix.
+            //! d_mat: A const reference to the density matrix.
+            void mayer_indices_rhf(const Eigen::Ref<const EigenMatrix<double> >& s_mat,
+                                   const Eigen::Ref<const EigenMatrix<double> >& d_mat);
 
             //! Population analysis - UHF only
             //! s_mat: A const reference to the overlap matrix.
@@ -89,6 +95,14 @@ namespace MolProps
             void population_analysis_uhf(const Eigen::Ref<const EigenMatrix<double> >& s_mat,
                                          const Eigen::Ref<const EigenMatrix<double> >& d_mat_a,
                                          const Eigen::Ref<const EigenMatrix<double> >& d_mat_b);
+            
+            //!Bond orders - UHF only
+            //! s_mat: A const reference to the overlap matrix.
+            //! d_mat_a: A const reference to the alpha density matrix.
+            //! d_mat_b: A const reference to the beta density matrix.
+            void mayer_indices_uhf(const Eigen::Ref<const EigenMatrix<double> >& s_mat,
+                                   const Eigen::Ref<const EigenMatrix<double> >& d_mat_a,
+                                   const Eigen::Ref<const EigenMatrix<double> >& d_mat_b);
             
             //! Compute and print quadrupole moments - RHF only
             //! d_mat: A const reference to the density matrix.
@@ -111,6 +125,9 @@ namespace MolProps
 
             //! Print population analysis information - RHF and UHF
             void print_population_analysis() const;
+
+            //! Print Mayer indices - RHF and UHF
+            void print_mayer_indices() const;
 
             //! get a reference to the X component dipole matrix
             const Eigen::Ref<const EigenMatrix<double>> get_dipole_x() const {return mu_x;}
@@ -141,6 +158,7 @@ namespace MolProps
             EigenVector<double> low_charge;     // Lowdin charges
             Vec3D mu_cart;                      // Holds the nuclear cartesian dipole components
             EigenVector<double> quadp_moments;  // Quadrupole components
+            EigenMatrix<double> mayer_indices;  // Mayer indices
 
             void cphf_diis(EigenMatrix<double>& U_1, EigenMatrix<double>& U_2, EigenMatrix<double>& U_3,
                            const Eigen::Ref<const EigenMatrix<double> >& del_U1,

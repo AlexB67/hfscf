@@ -142,6 +142,7 @@ void Mol::scf::post_rhf()
         molprops->create_dipole_vectors_rhf(d_mat);
         molprops->create_quadrupole_tensors_rhf(d_mat);
         molprops->population_analysis_rhf(s_mat, d_mat);
+        molprops->mayer_indices_rhf(s_mat, d_mat);
         molprops->print_dipoles();
         molprops->print_quadrupoles();
 
@@ -151,6 +152,7 @@ void Mol::scf::post_rhf()
             molprops->calc_static_polarizabilities(C_mat, mo_energies, eri_vec);
 
         molprops->print_population_analysis();
+        molprops->print_mayer_indices();
     }
 
     if(hf_settings::get_gradient_type().length() && !hf_settings::get_scf_direct()
@@ -267,9 +269,12 @@ void Mol::scf::post_uhf()
         std::unique_ptr<MolProps::Molprops> molprops = std::make_unique<MolProps::Molprops>(molecule);
         molprops->create_dipole_vectors_uhf(d_alpha, d_beta);
         molprops->create_quadrupole_tensors_uhf(d_alpha, d_beta);
+        molprops->population_analysis_uhf(s_mat, d_alpha, d_beta);
+        molprops->mayer_indices_uhf(s_mat, d_alpha, d_beta);
         molprops->print_dipoles();
         molprops->print_quadrupoles();
         molprops->print_population_analysis();
+        molprops->print_mayer_indices();
     }
 
     if(hf_settings::get_gradient_type().length() && !hf_settings::get_scf_direct())

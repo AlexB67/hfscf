@@ -1,0 +1,30 @@
+# trifluoroethanol RHF/6-31G
+scf_type = RHF
+initial_guess = SAD
+# symmetrize_geom = true
+# Fails to determine point goup with default thresholds
+point_group_threshold = RELAXED
+basis_set = 6-31G
+diis_range = 5
+density_damp = 1.0
+rms_tol = 0.5E-07
+electronic_properties = true
+gradient_type = SCF
+# geom_opt = SCF
+# geom_opt_tol = HIGH
+# frequencies = SCF
+# freq_write_molden = true
+# geom_opt_write_xyz = true
+units = angstrom
+{
+  C         -0.87801        0.25687        0.35097
+  C          0.39573       -0.39712       -0.29356
+  F         -1.97367       -0.53047        0.25664
+  F         -0.75489        0.52233        1.66776
+  F         -1.24253        1.42614       -0.21428
+  H          0.60945       -1.35793        0.21092
+  O          1.43194        0.52746       -0.11268
+  H          0.20348       -0.59537       -1.36454
+  H          2.20851        0.14809       -0.50124
+}
+

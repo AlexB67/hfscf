@@ -503,9 +503,9 @@ void MOLEC::Molecule::do_geometry_analysis()
 		i_tensor(0, 0) += m_i * (geom(i, 1) * geom(i, 1) + geom(i, 2) * geom(i, 2));
 		i_tensor(1, 1) += m_i * (geom(i, 0) * geom(i, 0) + geom(i, 2) * geom(i, 2));
 		i_tensor(2, 2) += m_i * (geom(i, 0) * geom(i, 0) + geom(i, 1) * geom(i, 1));
-		i_tensor(0, 1) += m_i * geom(i, 0) * geom(i, 1);
-		i_tensor(0, 2) += m_i * geom(i, 0) * geom(i, 2);
-		i_tensor(1, 2) += m_i * geom(i, 1) * geom(i, 2);
+		i_tensor(0, 1) -= m_i * geom(i, 0) * geom(i, 1);
+		i_tensor(0, 2) -= m_i * geom(i, 0) * geom(i, 2);
+		i_tensor(1, 2) -= m_i * geom(i, 1) * geom(i, 2);
   	}
  
 	i_tensor(1, 0) = i_tensor(0, 1);

@@ -4,7 +4,6 @@ initial_guess = SAD
 #symmetrize_geom = true
 # Fails to determine point goup with default thresholds
 point_group_threshold = RELAXED
-#basis_set = 6-31++G**
 basis_set = 6-311+G**
 use_symmetry = true
 diis_range = 5
@@ -15,6 +14,7 @@ gradient_type = SCF
 geom_opt = SCF
 geom_opt_tol = HIGH
 frequencies = SCF
+freq_write_molden = true
 units = angstrom
 {
   C -0.0461  0.6544  0.0000

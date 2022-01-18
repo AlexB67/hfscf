@@ -211,7 +211,7 @@ void MolProps::Molprops::population_analysis_rhf(const Eigen::Ref<const EigenMat
                                                  const Eigen::Ref<const EigenMatrix<double> >& d_mat) 
 {
     const auto& zval = m_mol->get_z_values();
-    size_t natoms = zval.size();
+    const size_t natoms = zval.size();
     mul_charge = EigenVector<double>::Zero(natoms);
     low_charge = EigenVector<double>::Zero(natoms);
 
@@ -219,7 +219,11 @@ void MolProps::Molprops::population_analysis_rhf(const Eigen::Ref<const EigenMat
 
     Eigen::SelfAdjointEigenSolver<EigenMatrix<double> > eigen_of_s(s_mat);
     EigenMatrix<double> S_sqrt = eigen_of_s.operatorSqrt();
-    const auto& mask = m_mol->get_atom_mask();
+    
+    const auto& mask = (m_mol->use_pure_am()) 
+                     ? m_mol->get_atom_spherical_mask()
+                     : m_mol->get_atom_mask();
+                     
     EigenMatrix<double> tmp2_mat = 2.0 * S_sqrt * d_mat * S_sqrt;
 
     int offset = 0;
@@ -239,6 +243,39 @@ void MolProps::Molprops::population_analysis_rhf(const Eigen::Ref<const EigenMat
     }
 }
 
+void MolProps::Molprops::mayer_indices_rhf(const Eigen::Ref<const EigenMatrix<double> >& s_mat,
+                                           const Eigen::Ref<const EigenMatrix<double> >& d_mat)
+{
+    const auto& mask = (m_mol->use_pure_am()) 
+                     ? m_mol->get_atom_spherical_mask()
+                     : m_mol->get_atom_mask();
+
+    const EigenMatrix<double> ds_mat = 2.0 * d_mat * s_mat;
+    const size_t natoms = m_mol->get_z_values().size();
+    Eigen::Index size = static_cast<Eigen::Index>(natoms);
+    mayer_indices = EigenMatrix<double>::Zero(size, size);
+
+    int offset1 = 0;
+    for (size_t i = 0; i < natoms; ++i)
+    {
+        const int basis_size1 = mask[i].mask_end - mask[i].mask_start + 1;
+        int offset2 = 0;
+        for (size_t j = 0; j < i; ++j)
+        {   
+            const int basis_size2 = mask[j].mask_end - mask[j].mask_start + 1;
+
+            for (int k = offset1; k < basis_size1 + offset1; ++k)
+                for (int l = offset2; l < basis_size2 + offset2; ++l)
+                    mayer_indices(i, j) += ds_mat(k, l) * ds_mat(l, k);
+            
+            mayer_indices(j, i) = mayer_indices(i, j);
+            offset2 += basis_size2;
+        }
+        
+        offset1 += basis_size1;
+    }
+}
+
 void MolProps::Molprops::population_analysis_uhf(const Eigen::Ref<const EigenMatrix<double> >& s_mat,
                                                  const Eigen::Ref<const EigenMatrix<double> >& d_mat_a,
                                                  const Eigen::Ref<const EigenMatrix<double> >& d_mat_b)
@@ -252,7 +289,11 @@ void MolProps::Molprops::population_analysis_uhf(const Eigen::Ref<const EigenMat
 
     Eigen::SelfAdjointEigenSolver<EigenMatrix<double> > eigen_of_s(s_mat);
     EigenMatrix<double> S_sqrt = eigen_of_s.operatorSqrt();
-    const auto& mask = m_mol->get_atom_mask();
+
+    const auto& mask = (m_mol->use_pure_am()) 
+                     ? m_mol->get_atom_spherical_mask()
+                     : m_mol->get_atom_mask();
+
     EigenMatrix<double> tmp2_mat = S_sqrt * (d_mat_a + d_mat_b) * S_sqrt;
 
     int offset = 0;
@@ -269,6 +310,41 @@ void MolProps::Molprops::population_analysis_uhf(const Eigen::Ref<const EigenMat
         }
 
         offset += basis_size;
+    }
+}
+
+void MolProps::Molprops::mayer_indices_uhf(const Eigen::Ref<const EigenMatrix<double> >& s_mat,
+                                           const Eigen::Ref<const EigenMatrix<double> >& d_mat_a,
+                                           const Eigen::Ref<const EigenMatrix<double> >& d_mat_b)
+{
+    const auto& mask = (m_mol->use_pure_am()) 
+                     ? m_mol->get_atom_spherical_mask()
+                     : m_mol->get_atom_mask();
+
+    const EigenMatrix<double> ds_mat_ab_plus  = (d_mat_a + d_mat_b) * s_mat;
+    const EigenMatrix<double> ds_mat_ab_minus = (d_mat_a - d_mat_b) * s_mat;
+    const size_t natoms = m_mol->get_z_values().size();
+    Eigen::Index size = static_cast<Eigen::Index>(natoms);
+    mayer_indices = EigenMatrix<double>::Zero(size, size);
+
+    int offset1 = 0;
+    for (size_t i = 0; i < natoms; ++i)
+    {
+        const int basis_size1 = mask[i].mask_end - mask[i].mask_start + 1;
+        int offset2 = 0;
+        for (size_t j = 0; j < i; ++j)
+        {   
+            const int basis_size2 = mask[j].mask_end - mask[j].mask_start + 1;
+
+            for (int k = offset1; k < basis_size1 + offset1; ++k)
+                for (int l = offset2; l < basis_size2 + offset2; ++l)
+                    mayer_indices(i, j) += ds_mat_ab_plus(k, l) * ds_mat_ab_plus(l, k)
+                                         + ds_mat_ab_minus(k, l) * ds_mat_ab_minus(l, k);
+            mayer_indices(j, i) = mayer_indices(i, j);
+            offset2 += basis_size2;
+        }
+        
+        offset1 += basis_size1;
     }
 }
 
@@ -674,6 +750,15 @@ void MolProps::Molprops::print_quadrupoles() const
               << quadp_moments[2] * au_to_debeye * bohr_to_angstrom;
     std::cout << std::setw(5) << "YZ " << std::right << std::setw(13) << std::setprecision(8) 
               << quadp_moments[4] * au_to_debeye * bohr_to_angstrom << "\n";
+}
+
+void MolProps::Molprops::print_mayer_indices() const
+{
+    std::cout << "\n******************************\n";
+    std::cout << "  Mayer Indices (bond orders)\n";
+    std::cout << "  #  B(a, b) \n"; 
+    std::cout << "******************************\n";
+    HFCOUT::pretty_print_matrix<double>(mayer_indices);
 }
 
 void MolProps::Molprops::print_population_analysis() const
