@@ -230,7 +230,7 @@ void POSTSCF::post_scf_cis::calc_cis_energies(const std::shared_ptr<MOLEC::Molec
     std::cout << "   # Determinants = " << size << "\n";
     std::cout << "   Spatial representation Hamiltonian dimensions: ";
     std::cout << " " << occ * virt << "x" << occ * virt << "S, " << occ * virt << "x" << occ * virt << "T\n"; 
-    std::cout << "   (Approx. total memory use " << (2 * e_rep_mo.size() * sizeof(double) / 1048576) + 
+    std::cout << "   (Approx. total memory: " << (2 * e_rep_mo.size() * sizeof(double) / 1048576) + 
               // Include eigenvecs for singlets, mo eri tensor + eri ao basis eri tensor
               3 * s_energies.size() * s_energies.size() * sizeof(double) / 1048576 << "MB)\n\n";
     std::cout << "                                                       (> 10% max 8) \n";
@@ -258,7 +258,7 @@ void POSTSCF::post_scf_cis::calc_cis_energies(const std::shared_ptr<MOLEC::Molec
 
         if (199 == i)
         {
-            std::cout << "\n Ouput truncated after a 200 items.\n";
+            std::cout << "\n Ouput truncated after 200 items.\n";
             break; 
         }
     }   
@@ -352,7 +352,7 @@ void POSTSCF::post_scf_cis::calc_rpa_energies(const Eigen::Ref<const EigenMatrix
         
         if (199 == i)
         {
-            std::cout << "\n Ouput truncated after a 200 items.\n";
+            std::cout << "\n Ouput truncated after 200 items.\n";
             break;
         }
     }
